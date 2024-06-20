@@ -1,8 +1,25 @@
-# LOTTUS-PHP
+# .NET 8 API Course
 
 ### Description
 
-Designed to more accurately play sorting games.
+Clean Architecture, user Identity system and Azure deployment using CI/CD + practical exercises.
+
+## Common Nuget Console commands
+
+Commands and generation and very useful when using Entity Framework to interact with the database. <br>
+In the package manager console on Visual Studio, make sure "Default project" is set correctly, that is, the incoming commands will take effect on the right project inside the solution.
+
+#### Add migration command
+
+```cmd
+Add-Migration "migration_name"
+```
+
+#### Apply migration and update the DB
+
+```cmd
+Upadte-Database
+```
 
 #### Push an existing folder
 
