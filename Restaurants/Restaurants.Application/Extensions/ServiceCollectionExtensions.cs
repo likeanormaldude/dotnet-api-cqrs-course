@@ -8,7 +8,10 @@ public static class ServiceCollectionExtensions
 {
     public static void AddApplication(this IServiceCollection services)
     {
+        // Services
         services.AddScoped<IRestaurantsService, RestaurantsService>();
         services.AddScoped<IBooksService, BooksService>();
+
+        services.AddAutoMapper(typeof(ServiceCollectionExtensions).Assembly);
     }
 }

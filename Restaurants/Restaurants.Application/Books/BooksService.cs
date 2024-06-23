@@ -1,4 +1,5 @@
-﻿using Microsoft.Extensions.Logging;
+﻿using AutoMapper;
+using Microsoft.Extensions.Logging;
 using Restaurants.Application.Dtos;
 using Restaurants.Domain.Entities;
 using Restaurants.Domain.Repositories;
@@ -7,7 +8,8 @@ namespace Restaurants.Application.Books;
 
 public class BooksService(
     IRestaurantsRepository restaurantsRepository,
-    ILogger<BooksService> logger
+    ILogger<BooksService> logger,
+    IMapper mapper
 ) : IBooksService
 {
     public async Task<IEnumerable<BookDto>> GetAllBooks()
@@ -15,7 +17,7 @@ public class BooksService(
         logger.LogInformation("Getting all books");
         
         var books = await restaurantsRepository.GetAllBooksAsync();
-        var booksDto = books.Select(r => BookDto.FromEntity(r));
+        var booksDto = mapper.Map<IEnumerable<BookDto>>(books);
 
         return booksDto;
     }
@@ -29,7 +31,7 @@ public class BooksService(
         if(book == null )
             return null;
 
-        var bookDto = BookDto.FromEntity(book);
+        var bookDto = mapper.Map<BookDto>(book);
 
         return bookDto;
     }
@@ -39,7 +41,7 @@ public class BooksService(
         logger.LogInformation("Creating new book");
         
         var updatedBookList = await restaurantsRepository.CreateBook(book);
-        var updatedBookDtoList = updatedBookList.Select(x => BookDto.FromEntity(x));
+        var updatedBookDtoList = mapper.Map<IEnumerable<BookDto>>(updatedBookList);
         
         return updatedBookDtoList;
     }
@@ -52,7 +54,7 @@ public class BooksService(
         if (updatedBookList == null)
             return null;
 
-        var updatedBookDtoList = updatedBookList.Select(x => BookDto.FromEntity(x));
+        var updatedBookDtoList = mapper.Map<IEnumerable<BookDto>>(updatedBookList);
 
         return updatedBookDtoList;
     }
@@ -66,7 +68,7 @@ public class BooksService(
         if (updatedBookList == null)
             return null;
 
-        var updatedBookDtoList = updatedBookList.Select(x => BookDto.FromEntity(x));
+        var updatedBookDtoList = mapper.Map<IEnumerable<BookDto>>(updatedBookList);
 
         return updatedBookDtoList;
     }
