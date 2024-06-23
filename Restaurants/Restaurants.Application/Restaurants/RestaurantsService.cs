@@ -12,6 +12,17 @@ public class RestaurantsService(
     IMapper mapper
 ) : IRestaurantsService
 {
+    public async Task<int> Create(CreateRestaurantDto dto)
+    {
+        logger.LogInformation("Creating a new restaurant");
+        
+        var restaurant = mapper.Map<Restaurant>(dto);
+
+        int id = await restaurantsRepository.CreateRestaurant(restaurant);
+
+        return id;
+    }
+
     public async Task<IEnumerable<RestaurantDto>> GetAllRestaurants()
     {
         logger.LogInformation("Getting all restaurants");

@@ -4,9 +4,12 @@ namespace Restaurants.Domain.Repositories;
 
 public interface IRestaurantsRepository
 {
+    // Restaurants
     Task<IEnumerable<Restaurant>> GetAllRestaurantsAsync();
     Task<Restaurant?> GetRestaurantByIdAsync(int id);
+    Task<int> CreateRestaurant(Restaurant restaurant);
 
+    // Books
     Task<IEnumerable<Book>> GetAllBooksAsync();
     Task<Book?> GetBookByIdAsync(int id);
     Task<IEnumerable<Book>> CreateBook(Book book);

@@ -1,4 +1,5 @@
 ﻿using Microsoft.AspNetCore.Mvc;
+using Restaurants.Application.Dtos;
 using Restaurants.Application.Restaurants;
 
 namespace Restaurants.API.Controllers;
@@ -30,5 +31,17 @@ public class RestaurantsController
         }
 
         return Ok(restaurant);
+    }
+
+    [HttpPost]
+    public async Task<IActionResult> CreateRestaurant([FromBody] CreateRestaurantDto createRestaurantDto)
+    {
+        int id = await restaurantsService.Create(createRestaurantDto);
+
+        /*
+         This line returns the property "Location" in the headers point to the location
+         of the method "GetRestaurant", for the user to see the newly create record
+         */
+        return CreatedAtAction(nameof(GetRestaurant), new { id }, "Restaurant created successfully" );
     }
 }
