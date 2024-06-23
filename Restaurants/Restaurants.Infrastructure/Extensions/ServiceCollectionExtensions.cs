@@ -16,7 +16,6 @@ namespace Restaurants.Infrastructure.Extensions
             string connectionString = configuration.GetConnectionString("DefaultConnectionString") ?? string.Empty;
             services.AddDbContext<RestaurantsDbContext>(options => options.UseSqlServer(connectionString));
 
-            // Seeder
             services.AddScoped<IRestaurantSeeder, RestaurantSeeder>();
             services.AddScoped<IRestaurantsRepository, RestaurantsRepository>();
         }

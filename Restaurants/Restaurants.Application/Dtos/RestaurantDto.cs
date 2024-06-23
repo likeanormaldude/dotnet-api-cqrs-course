@@ -2,20 +2,19 @@
 using Restaurants.Domain.Entities;
 
 namespace Restaurants.Application.Dtos;
-
 public class RestaurantDto
 {
     public int Id { get; set; }
-    public string Name { get; set; }
-    public string Description { get; set; }
-    public string Category { get; set; }
+    public string Name { get; set; } = default!;
+    public string Description { get; set; } = default!;
+    public string Category { get; set; } = default!;
     public bool HasDelivery { get; set; }
 
-    public string? City { get; set; }
+    public string? City { get; set; } = default!;
     public string? Street { get; set; }
     public string? PostalCode { get; set; }
 
-    public List<DishDto> Dishes { get; set; }
+    public List<DishDto> Dishes { get; set; } = [];
 
     public static RestaurantDto? FromEntity(Restaurant restaurant)
     {
@@ -31,9 +30,13 @@ public class RestaurantDto
             Id = restaurant.Id,
             HasDelivery = restaurant.HasDelivery,
             Name = restaurant.Name,
-            City = restaurant.Address.City,
-            Street = restaurant.Address.Street,
-            PostalCode = restaurant.Address.PostalCode,
+            City = restaurant.Address?.City,
+            Street = restaurant.Address?.Street,
+            PostalCode = restaurant.Address?.PostalCode,
+            Dishes = restaurant
+                .Dishes
+                .Select( r => DishDto.FromEntity(r))
+                .ToList(),
         };
     }
 

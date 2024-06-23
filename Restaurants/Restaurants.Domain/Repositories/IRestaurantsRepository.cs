@@ -8,7 +8,8 @@ public interface IRestaurantsRepository
     Task<Restaurant?> GetRestaurantByIdAsync(int id);
 
     Task<IEnumerable<Book>> GetAllBooksAsync();
-    //Task<Book?> GetBooksByIdAsync(int id);
-
-
+    Task<Book?> GetBookByIdAsync(int id);
+    Task<IEnumerable<Book>> CreateBook(Book book);
+    Task<IEnumerable<Book>?> DeleteBook(int id);
+    Task<IEnumerable<Book>?> UpdateBook(Book newBook);
 }
