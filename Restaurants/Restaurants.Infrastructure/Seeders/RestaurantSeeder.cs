@@ -1,10 +1,5 @@
 ﻿using Restaurants.Domain.Entities;
 using Restaurants.Infrastructure.Persistence;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Restaurants.Infrastructure.Seeders
 {
@@ -14,10 +9,20 @@ namespace Restaurants.Infrastructure.Seeders
         {
             if (await dbContext.Database.CanConnectAsync())
             {
+                // Restaurants
                 if (!dbContext.Restaurants.Any())
                 {
                     var restaurants = GetRestaurants();
                     dbContext.Restaurants.AddRange(restaurants);
+                    await dbContext.SaveChangesAsync();
+                }
+
+                // Books
+                if (!dbContext.Books.Any())
+                {
+                    var books = GetBooks();
+
+                    dbContext.Books.AddRange(books);
                     await dbContext.SaveChangesAsync();
                 }
             }
@@ -75,6 +80,27 @@ namespace Restaurants.Infrastructure.Seeders
             };
 
             return restaurants;
+        }
+
+        private IEnumerable<Book> GetBooks()
+        {
+            List<Book> books = new()
+            {
+               new Book()
+               {
+                   Title = "O rapaz que não era de Liverpool",
+                   Description = "Os Beatles eram 4. Somente 4.",
+                   NumberOfPages = 190
+               },
+               new Book()
+               {
+                   Title = "The Book Thief",
+                   Description = "Primeiro as cores, depois as pessoas. É assim que eu vejo a vida. Uma pequena nota de sua narradora. Você vai morrer.",
+                   NumberOfPages = 592
+               },
+            };
+
+            return books;
         }
     }
 }

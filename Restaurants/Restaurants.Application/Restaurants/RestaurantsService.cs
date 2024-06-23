@@ -13,7 +13,7 @@ public class RestaurantsService(
     {
         logger.LogInformation("Getting all restaurants");
 
-        var restaurants = await restaurantsRepository.GetAllAsync();
+        var restaurants = await restaurantsRepository.GetAllRestaurantsAsync();
         var restaurantsDto = restaurants.Select(r => RestaurantDto.FromEntity(r));
 
         return restaurantsDto!;
@@ -22,7 +22,7 @@ public class RestaurantsService(
     public async Task<RestaurantDto?> GetById(int id)
     {
         logger.LogInformation($"Getting restaurant with Id {id}");
-        var restaurant = await restaurantsRepository.GetByIdAsync(id);
+        var restaurant = await restaurantsRepository.GetRestaurantByIdAsync(id);
 
         if (restaurant == null)
         {
