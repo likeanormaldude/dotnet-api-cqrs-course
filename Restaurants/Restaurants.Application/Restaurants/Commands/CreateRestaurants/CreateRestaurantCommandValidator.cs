@@ -1,14 +1,13 @@
 ﻿using FluentValidation;
-using Restaurants.Application.Dtos;
 
-namespace Restaurants.Application.Restaurants.Validators;
+namespace Restaurants.Application.Restaurants.Commands.CreateRestaurants;
 
-public class CreateRestaurantvalidator: AbstractValidator<CreateRestaurantDto>
+public class CreateRestaurantCommandValidator : AbstractValidator<CreateRestaurantCommand>
 {
 
-    private readonly List<string> validCategories = ["Italian", "Brazilian", "Japenese", "Chinese", "American", "Vietnamese", "Korean"];
+    private readonly List<string> validCategories = ["Italian", "Brazilian", "Japanese", "Chinese", "American", "Vietnamese", "Korean"];
 
-    public CreateRestaurantvalidator()
+    public CreateRestaurantCommandValidator()
     {
         RuleFor(dto => dto.Name)
             .Length(3, 100);

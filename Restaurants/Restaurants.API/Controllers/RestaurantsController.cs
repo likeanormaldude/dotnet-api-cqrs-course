@@ -1,21 +1,23 @@
-﻿using Microsoft.AspNetCore.Mvc;
-using Restaurants.Application.Dtos;
-using Restaurants.Application.Restaurants;
+﻿using MediatR;
+using Microsoft.AspNetCore.Mvc;
+using Restaurants.Application.Restaurants.Commands.CreateRestaurants;
+using Restaurants.Application.Restaurants.Queries.GetAllRestaurants;
+using Restaurants.Application.Restaurants.Queries.GetRestaurantById;
 
 namespace Restaurants.API.Controllers;
-
 
 [ApiController]
 [Route("api/restaurants")]
 public class RestaurantsController
 (
-    IRestaurantsService restaurantsService
+    IMediator mediator
 ): ControllerBase
 {
     [HttpGet]
     public async Task<IActionResult>  GetAll()
     {
-        var restaurants = await restaurantsService.GetAllRestaurants();
+        var query = new GetAllRestaurantsQuery();
+        var restaurants = await mediator.Send(query);
         return Ok(restaurants);
     }
 
@@ -23,7 +25,8 @@ public class RestaurantsController
     [HttpGet("{id}")]
     public async Task<IActionResult> GetRestaurant([FromRoute] int id)
     {
-        var restaurant = await restaurantsService.GetById(id);
+        var query = new GetRestaurantByIdQuery(id);
+        var restaurant = await mediator.Send(query);
 
         if(restaurant == null)
         {
@@ -34,9 +37,9 @@ public class RestaurantsController
     }
 
     [HttpPost]
-    public async Task<IActionResult> CreateRestaurant([FromBody] CreateRestaurantDto createRestaurantDto)
+    public async Task<IActionResult> CreateRestaurant(CreateRestaurantCommand command)
     {
-        int id = await restaurantsService.Create(createRestaurantDto);
+        int id = await mediator.Send(command);
 
         /*
          This line returns the property "Location" in the headers point to the location
