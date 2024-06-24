@@ -1,6 +1,7 @@
 ﻿using MediatR;
 using Microsoft.AspNetCore.Mvc;
 using Restaurants.Application.Restaurants.Commands.CreateRestaurants;
+using Restaurants.Application.Restaurants.Commands.DeleteRestaurant;
 using Restaurants.Application.Restaurants.Queries.GetAllRestaurants;
 using Restaurants.Application.Restaurants.Queries.GetRestaurantById;
 
@@ -46,5 +47,17 @@ public class RestaurantsController
          of the method "GetRestaurant", for the user to see the newly create record
          */
         return CreatedAtAction(nameof(GetRestaurant), new { id }, "Restaurant created successfully" );
+    }
+
+    [HttpDelete("{id}")]
+    public async Task<IActionResult> DeleteRestaurant([FromRoute] int id)
+    {
+        var command = new DeleteRestaurantCommand(id);
+        var isDeleted = await mediator.Send(command);
+
+        if (isDeleted)
+            return NoContent();
+
+        return NotFound();
     }
 }

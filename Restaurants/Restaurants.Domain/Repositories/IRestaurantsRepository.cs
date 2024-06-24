@@ -8,6 +8,8 @@ public interface IRestaurantsRepository
     Task<IEnumerable<Restaurant>> GetAllRestaurantsAsync();
     Task<Restaurant?> GetRestaurantByIdAsync(int id);
     Task<int> CreateRestaurant(Restaurant restaurant);
+    Task DeleteRestaurant(Restaurant restaurant);
+
 
     // Books
     Task<IEnumerable<Book>> GetAllBooksAsync();
@@ -15,4 +17,5 @@ public interface IRestaurantsRepository
     Task<IEnumerable<Book>> CreateBook(Book book);
     Task<IEnumerable<Book>?> DeleteBook(int id);
     Task<IEnumerable<Book>?> UpdateBook(Book newBook);
+
 }

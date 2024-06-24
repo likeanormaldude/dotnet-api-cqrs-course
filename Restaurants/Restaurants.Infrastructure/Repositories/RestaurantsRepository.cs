@@ -20,6 +20,7 @@ internal class RestaurantsRepository(RestaurantsDbContext dbContext)
         var restaurant = dbContext.Restaurants
             .Include(r => r.Dishes)
             .FirstOrDefaultAsync( x => x.Id == id);
+
         return restaurant;
     }
 
@@ -84,5 +85,12 @@ internal class RestaurantsRepository(RestaurantsDbContext dbContext)
 
         await dbContext.SaveChangesAsync();
         return restaurant.Id;
+    }
+
+    public async Task DeleteRestaurant(Restaurant restaurant)
+    {
+        dbContext.Remove(restaurant);
+
+        await dbContext.SaveChangesAsync();
     }
 }
