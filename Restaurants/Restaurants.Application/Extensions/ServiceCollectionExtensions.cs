@@ -19,7 +19,8 @@ public static class ServiceCollectionExtensions
         // @see https://stackoverflow.com/a/70610564/7658732 for error "Some services are not able to be constructed..."
         var logger = serviceProvider.GetService<ILogger<RestaurantDto>>();
 
-        services.AddSingleton(typeof(ILogger), logger);
+        if(logger != null)
+            services.AddSingleton(typeof(ILogger), logger);
 
         // Services
         services.AddScoped<IBooksService, BooksService>();

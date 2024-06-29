@@ -1,9 +1,9 @@
 ﻿using MediatR;
 using Restaurants.Domain.Entities;
 
-namespace Restaurants.Application.Restaurants.Commands.CreateRestaurants;
+namespace Restaurants.Application.Restaurants.Commands.CreateRestaurant;
 
-public class CreateRestaurantCommand : IRequest<int>
+public class CreateRestaurantCommand : IRequest<int>, IRestaurantCommand
 {
     public string Name { get; set; } = string.Empty;
     public string Description { get; set; } = string.Empty;

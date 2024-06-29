@@ -43,7 +43,7 @@ internal class RestaurantsRepository(RestaurantsDbContext dbContext)
     public async Task<IEnumerable<Book>> CreateBook(Book book)
     {
         dbContext.Books.Add(book);
-        await dbContext.SaveChangesAsync();
+        await SaveChanges();
         return await dbContext.Books.ToListAsync();
     }
 
@@ -58,7 +58,7 @@ internal class RestaurantsRepository(RestaurantsDbContext dbContext)
 
         dbContext.Remove(foundBook);
 
-        await dbContext.SaveChangesAsync();
+        await SaveChanges();
 
         return await dbContext.Books.ToListAsync();
     }
@@ -74,7 +74,7 @@ internal class RestaurantsRepository(RestaurantsDbContext dbContext)
         foundBook.Description = newBook.Description;
         foundBook.NumberOfPages = newBook.NumberOfPages;
 
-        await dbContext.SaveChangesAsync();
+        await SaveChanges();
 
         return await dbContext.Books.ToListAsync();
     }
@@ -83,7 +83,7 @@ internal class RestaurantsRepository(RestaurantsDbContext dbContext)
     {
         dbContext.Restaurants.Add(restaurant);
 
-        await dbContext.SaveChangesAsync();
+        await SaveChanges();
         return restaurant.Id;
     }
 
@@ -91,6 +91,25 @@ internal class RestaurantsRepository(RestaurantsDbContext dbContext)
     {
         dbContext.Remove(restaurant);
 
-        await dbContext.SaveChangesAsync();
+        await SaveChanges();
     }
+
+    public async Task<IEnumerable<Restaurant>?> UpdateRestaurant(Restaurant newRestaurant)
+    {
+        var found = await dbContext.Restaurants.FirstOrDefaultAsync(x => x.Id == newRestaurant.Id);
+
+        if (found == null)
+            return null;
+
+        found.Name = newRestaurant.Name;
+        found.Description = newRestaurant.Description;
+        found.Category = newRestaurant.Category;
+        found.HasDelivery = newRestaurant.HasDelivery;
+
+        await SaveChanges();
+
+        return await dbContext.Restaurants.ToListAsync();
+    }
+
+    public Task SaveChanges() => dbContext.SaveChangesAsync();
 }

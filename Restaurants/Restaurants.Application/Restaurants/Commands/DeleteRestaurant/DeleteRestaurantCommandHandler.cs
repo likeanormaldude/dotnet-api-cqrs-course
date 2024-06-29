@@ -11,7 +11,7 @@ internal class DeleteRestaurantCommandHandler(
 {
     public async Task<bool> Handle(DeleteRestaurantCommand request, CancellationToken cancellationToken)
     {
-        logger.LogInformation($"Delete restaurant with id {request.Id}");
+        logger.LogInformation("Delete restaurant with id {RestaurantId}", request.Id);
 
         var restaurant = await restaurantsRepository.GetRestaurantByIdAsync(request.Id);
 

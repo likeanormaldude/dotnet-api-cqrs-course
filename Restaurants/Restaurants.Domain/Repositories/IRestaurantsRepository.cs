@@ -9,6 +9,8 @@ public interface IRestaurantsRepository
     Task<Restaurant?> GetRestaurantByIdAsync(int id);
     Task<int> CreateRestaurant(Restaurant restaurant);
     Task DeleteRestaurant(Restaurant restaurant);
+    Task<IEnumerable<Restaurant>?> UpdateRestaurant(Restaurant restaurant);
+    Task SaveChanges();
 
 
     // Books

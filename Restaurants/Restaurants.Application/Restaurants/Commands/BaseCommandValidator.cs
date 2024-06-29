@@ -1,13 +1,14 @@
 ﻿using FluentValidation;
+using Restaurants.Domain.Entities;
 
-namespace Restaurants.Application.Restaurants.Commands.CreateRestaurants;
+namespace Restaurants.Application.Restaurants.Commands;
 
-public class CreateRestaurantCommandValidator : AbstractValidator<CreateRestaurantCommand>
+public class BaseCommandValidator<T> : AbstractValidator<T>
+    where T: IRestaurantCommand
 {
-
     private readonly List<string> validCategories = ["Italian", "Brazilian", "Japanese", "Chinese", "American", "Vietnamese", "Korean"];
-
-    public CreateRestaurantCommandValidator()
+    
+    public void ApplyCommonRules()
     {
         RuleFor(dto => dto.Name)
             .Length(3, 100);
@@ -29,6 +30,5 @@ public class CreateRestaurantCommandValidator : AbstractValidator<CreateRestaura
 
         RuleFor(dto => dto.PostalCode)
             .Matches(@"^(\S{3})(\s)?(\S{3})$").WithMessage("Please provide a valid post code (XXX XXX).");
-
     }
 }

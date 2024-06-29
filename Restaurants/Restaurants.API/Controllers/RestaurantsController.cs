@@ -1,9 +1,12 @@
 ﻿using MediatR;
 using Microsoft.AspNetCore.Mvc;
-using Restaurants.Application.Restaurants.Commands.CreateRestaurants;
+using Restaurants.Application.Restaurants.Commands.CreateRestaurant;
 using Restaurants.Application.Restaurants.Commands.DeleteRestaurant;
+using Restaurants.Application.Restaurants.Commands.UpdateRestaurant;
 using Restaurants.Application.Restaurants.Queries.GetAllRestaurants;
 using Restaurants.Application.Restaurants.Queries.GetRestaurantById;
+using Restaurants.Domain.Extensions;
+using static Microsoft.EntityFrameworkCore.DbLoggerCategory.Database;
 
 namespace Restaurants.API.Controllers;
 
@@ -57,6 +60,20 @@ public class RestaurantsController
 
         if (isDeleted)
             return NoContent();
+
+        return NotFound();
+    }
+
+
+    // PATCH - .https://localhost:7255/api/restaurants/12
+    [HttpPatch("{id}")]
+    public async Task<IActionResult> UpdateRestaurant([FromRoute] int id, UpdateRestaurantCommand newRestaurant)
+    {
+        newRestaurant.Id = id;
+        var result = await mediator.Send(newRestaurant);
+
+        if (!result.IsEmptyList())
+            return Ok(result);
 
         return NotFound();
     }
