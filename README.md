@@ -1,8 +1,29 @@
-# LOTTUS-PHP
+# .NET 8 API Course
 
 ### Description
 
-Designed to more accurately play sorting games.
+Clean Architecture, user Identity system and Azure deployment using CI/CD + practical exercises.
+
+## Common Nuget Console commands
+
+Commands and generation and very useful when using Entity Framework to interact with the database. <br>
+In the package manager console on Visual Studio, make sure "Default project" is set correctly, that is, the incoming commands will take effect on the right project inside the solution.
+
+#### Add migration command
+
+```cmd
+Add-Migration "migration_name"
+```
+
+#### Apply migration and update the DB
+
+```cmd
+Update-Database
+```
+
+#### Csharpier extension
+It's recommended to install [csharpier] on visual studio to mantain code pattern accross the project. The rules can be found at `.editorconfig`
+
 
 #### Push an existing folder
 
@@ -25,3 +46,10 @@ git push -u origin master
 ```sh
 yarn install
 ```
+
+
+
+
+[//]: # (Links)
+
+   [csharpier]: <https://csharpier.com/>
