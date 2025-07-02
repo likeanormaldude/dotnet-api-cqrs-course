@@ -1,0 +1,11 @@
+[*.*]
+enable = true
+command = EditorContextMenus.CodeWindow.ReformatWithCSharpier
+allowed_extensions = .*
+
+[*.cs]
+indent_style = tabs
+indent_size = 4
+tab_width = 4
+insert_spaces = false
+max_line_length = 120
