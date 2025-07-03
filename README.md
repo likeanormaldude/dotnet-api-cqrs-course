@@ -21,6 +21,17 @@ Add-Migration "migration_name"
 Update-Database
 ```
 
+#### Install EF CLI Tool
+Useful to run and apply commands related to the db.
+```bash
+dotnet tool install --global dotnet-ef
+```
+### Apply changes to database as per migrations
+```bash
+dotnet ef database update
+```
+
+
 #### Csharpier extension
 It's recommended to install [csharpier] on visual studio to mantain code pattern accross the project. The rules can be found at `.editorconfig`
 
