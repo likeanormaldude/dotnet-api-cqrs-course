@@ -3,7 +3,7 @@ using Restaurants.Domain.Entities;
 
 namespace Restaurants.Infrastructure.Persistence;
 
-internal class RestaurantsDbContext : DbContext
+internal class RestaurantsDbContext(DbContextOptions<RestaurantsDbContext> options) : DbContext(options)
 {
     internal DbSet<Restaurant> Restaurants { get; set; }
     internal DbSet<Dish> Dishes { get; set; }
@@ -15,12 +15,5 @@ internal class RestaurantsDbContext : DbContext
         modelBuilder.Entity<Restaurant>().OwnsOne(r => r.Address);
         modelBuilder.Entity<Restaurant>().HasMany(r => r.Dishes).WithOne().HasForeignKey(d => d.RestaurantId);
         modelBuilder.Entity<Dish>().Property(d => d.Price).HasPrecision(10, 2);
-    }
-
-    protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
-    {
-        optionsBuilder.UseSqlServer(
-            "Server=localhost;Database=RestaurantsDb;Trusted_Connection=True;TrustServerCertificate=True;"
-        );
     }
 }
