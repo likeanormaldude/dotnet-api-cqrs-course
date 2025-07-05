@@ -1,6 +1,6 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Restaurants.Application.Restaurants;
-using Restaurants.Domain.Entities;
+using Restaurants.Application.Restaurants.Dtos;
 
 namespace Restaurants.API.Controllers;
 
@@ -11,7 +11,7 @@ public class RestaurantsController(IRestaurantsService restaurantsService) : Con
     [HttpGet]
     public async Task<IActionResult> GetAll()
     {
-        IEnumerable<Restaurant> restaurants = await restaurantsService.GetAllRestaurants();
+        IEnumerable<RestaurantDto> restaurants = await restaurantsService.GetAllRestaurants();
         return Ok(restaurants);
     }
 
@@ -19,7 +19,7 @@ public class RestaurantsController(IRestaurantsService restaurantsService) : Con
     [Route("{id}")]
     public async Task<IActionResult> GetById([FromRoute] int id)
     {
-        Restaurant? restaurants = await restaurantsService.GetRestaurantById(id);
+        RestaurantDto? restaurants = await restaurantsService.GetRestaurantById(id);
 
         if (restaurants == null)
         {
