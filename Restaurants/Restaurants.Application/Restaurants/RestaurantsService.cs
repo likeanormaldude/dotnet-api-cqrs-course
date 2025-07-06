@@ -1,5 +1,4 @@
-﻿using Mapster;
-using MapsterMapper;
+﻿using MapsterMapper;
 using Microsoft.Extensions.Logging;
 using Restaurants.Application.Restaurants.Dtos;
 using Restaurants.Domain.Entities;
@@ -17,8 +16,9 @@ internal class RestaurantsService(
     {
         logger.LogInformation("Getting all restaurants");
         IEnumerable<Restaurant> restaurants = await restaurantsRepository.GetAllAsync();
-        //IEnumerable<RestaurantDto> restaurantDtos = restaurants.Select(RestaurantDto.FromEntity)!;
-        IEnumerable<RestaurantDto> restaurantDtos = restaurants.Adapt<IEnumerable<RestaurantDto>>();
+        IEnumerable<RestaurantDto> restaurantDtos = mapper.Map<IEnumerable<Restaurant>, IEnumerable<RestaurantDto>>(
+            restaurants
+        );
         return restaurantDtos;
     }
 
@@ -26,8 +26,7 @@ internal class RestaurantsService(
     {
         logger.LogInformation($"Getting restaurants by id {id}");
         Restaurant? restaurant = await restaurantsRepository.GetByIdAsync(id);
-        //RestaurantDto? restaurantDto = RestaurantDto.FromEntity(restaurant);
-        RestaurantDto? restaurantDto = restaurant.Adapt<RestaurantDto>();
+        RestaurantDto? restaurantDto = mapper.Map<RestaurantDto?>(restaurant ?? new object());
         return restaurantDto;
     }
 }

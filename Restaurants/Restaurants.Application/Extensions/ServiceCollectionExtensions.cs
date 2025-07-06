@@ -1,7 +1,10 @@
 ﻿using Mapster;
 using MapsterMapper;
 using Microsoft.Extensions.DependencyInjection;
+using Restaurants.Application.Dishes.Dtos;
 using Restaurants.Application.Restaurants;
+using Restaurants.Application.Restaurants.Dtos;
+using Restaurants.Domain.Entities;
 
 namespace Restaurants.Application.Extensions;
 
@@ -11,8 +14,22 @@ public static class ServiceCollectionExtensions
     {
         services.AddScoped<IRestaurantsService, RestaurantsService>();
 
-        // Mapster DI
-        services.AddSingleton(TypeAdapterConfig.GlobalSettings);
+        services.AddSingleton(GetMappingConfigs());
         services.AddScoped<IMapper, ServiceMapper>();
+    }
+
+    private static TypeAdapterConfig GetMappingConfigs()
+    {
+        var config = TypeAdapterConfig.GlobalSettings;
+
+        config.NewConfig<Dish, DishDto>();
+        config
+            .NewConfig<Restaurant, RestaurantDto>()
+            .Map(dest => dest.City, src => src.Address != null ? src.Address.City : "")
+            .Map(dest => dest.Street, src => src.Address != null ? src.Address.Street : "")
+            .Map(dest => dest.PostalCode, src => src.Address != null ? src.Address.PostalCode : "")
+            .Map(dest => dest.Dishes, src => src.Dishes);
+
+        return config;
     }
 }

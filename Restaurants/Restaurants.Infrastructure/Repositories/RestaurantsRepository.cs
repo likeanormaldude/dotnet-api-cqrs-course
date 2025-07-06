@@ -9,7 +9,7 @@ internal class RestaurantsRepository(RestaurantsDbContext dbContext) : IRestaura
 {
     public async Task<IEnumerable<Restaurant>> GetAllAsync()
     {
-        IEnumerable<Restaurant> restaurants = await dbContext.Restaurants.ToListAsync();
+        IEnumerable<Restaurant> restaurants = await dbContext.Restaurants.Include(x => x.Dishes).ToListAsync();
         return restaurants;
     }
 
