@@ -30,6 +30,13 @@ public static class ServiceCollectionExtensions
             .Map(dest => dest.PostalCode, src => src.Address != null ? src.Address.PostalCode : "")
             .Map(dest => dest.Dishes, src => src.Dishes);
 
+        config
+            .NewConfig<CreateRestaurantDto, Restaurant>()
+            .Map(dest => dest.Address.City, src => src.City)
+            .Map(dest => dest.Address.Street, src => src.Street)
+            .Map(dest => dest.Address.PostalCode, src => src.PostalCode)
+            .Map(dest => dest.Dishes, src => src.Dishes);
+
         return config;
     }
 }
