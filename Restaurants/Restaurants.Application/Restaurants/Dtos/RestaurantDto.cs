@@ -4,11 +4,11 @@ namespace Restaurants.Application.Restaurants.Dtos;
 
 public class RestaurantDto
 {
-    public int Id { get; set; }
+    public int Id { get; set; } = default;
     public string Name { get; set; } = default!;
-    public string Description { get; set; } = default!;
-    public string Category { get; set; } = default!;
-    public bool HasDelivery { get; set; }
+    public string Description { get; set; } = string.Empty;
+    public string Category { get; set; } = string.Empty;
+    public bool HasDelivery { get; set; } = default;
 
     //public string? ContactEmail { get; set; }
     //public string? ContactNumber { get; set; }

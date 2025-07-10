@@ -1,4 +1,5 @@
-﻿using Mapster;
+﻿using FluentValidation;
+using Mapster;
 using MapsterMapper;
 using Microsoft.Extensions.DependencyInjection;
 using Restaurants.Application.Dishes.Dtos;
@@ -13,9 +14,9 @@ public static class ServiceCollectionExtensions
     public static void AddApplication(this IServiceCollection services)
     {
         services.AddScoped<IRestaurantsService, RestaurantsService>();
-
         services.AddSingleton(GetMappingConfigs());
         services.AddScoped<IMapper, ServiceMapper>();
+        services.AddValidatorsFromAssemblyContaining(typeof(RestaurantsService));
     }
 
     private static TypeAdapterConfig GetMappingConfigs()

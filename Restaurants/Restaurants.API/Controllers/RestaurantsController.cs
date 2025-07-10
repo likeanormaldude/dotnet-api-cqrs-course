@@ -1,4 +1,6 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using FluentValidation;
+using Microsoft.AspNetCore.Mvc;
+using Restaurants.Application.Extensions;
 using Restaurants.Application.Restaurants;
 using Restaurants.Application.Restaurants.Dtos;
 
@@ -6,7 +8,10 @@ namespace Restaurants.API.Controllers;
 
 [ApiController]
 [Route("api/restaurants")]
-public class RestaurantsController(IRestaurantsService restaurantsService) : ControllerBase
+public class RestaurantsController(
+    IRestaurantsService restaurantsService,
+    IValidator<CreateRestaurantDto> createValidator
+) : ControllerBase
 {
     [HttpGet]
     public async Task<IActionResult> GetAll()
@@ -19,26 +24,26 @@ public class RestaurantsController(IRestaurantsService restaurantsService) : Con
     [Route("{id}")]
     public async Task<IActionResult> GetById([FromRoute] int id)
     {
-        RestaurantDto? restaurants = await restaurantsService.GetRestaurantById(id);
+        RestaurantDto? restaurant = await restaurantsService.GetRestaurantById(id);
 
-        if (restaurants == null)
+        if (restaurant == null)
         {
             return NotFound($"Restaurant with id {id} could not be found.");
         }
 
-        return Ok(restaurants);
+        return Ok(restaurant);
     }
 
     [HttpPost]
     public async Task<IActionResult> Create(CreateRestaurantDto createRestaurant)
     {
-        if (!ModelState.IsValid)
-        {
-            return BadRequest(ModelState);
-        }
+        var validationResults = await createValidator.ValidateAsync(createRestaurant);
+
+        if (!validationResults.IsValid)
+            return BadRequest(validationResults.Errors.ToGroupedValidationErrors().MapOnlyErrorMessages());
 
         int id = await restaurantsService.Create(createRestaurant);
 
-        return CreatedAtAction(nameof(GetById), new { id }, null);
+        return CreatedAtAction(nameof(GetById), new { id }, new { id });
     }
 }
