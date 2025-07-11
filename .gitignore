@@ -39,3 +39,4 @@ msbuild.wrn
 **obj/
 **/appsettings.json
 **/appsettings.Development.json
+**/*.log

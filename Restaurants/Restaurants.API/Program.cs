@@ -3,7 +3,6 @@ using Restaurants.Application.Restaurants.Queries.GetAllRestaurants;
 using Restaurants.Infrastructure.Extensions;
 using Restaurants.Infrastructure.Seeders;
 using Serilog;
-using Serilog.Events;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -17,21 +16,7 @@ builder.Services.AddMediatR(cfg =>
 builder.Services.AddControllers();
 builder.Services.AddApplication();
 builder.Services.AddInfrastructure(builder.Configuration);
-
-builder.Host.UseSerilog(
-    (context, cfg) =>
-    {
-        // [{Timestamp:HH:mm:ss} {Level:u3}] {Message:lj}{NewLine}{Exception}
-        string outputLogFormat =
-            "[{Timestamp: yyyy-MM-ddTHH:mm:ss} {Level:u3}] |{SourceContext}| {NewLine}{Message:lj}{NewLine}{Exception}";
-
-        //string outputLogFormat = "[{Timestamp:HH:mm:ss} {Level:u3}] {Message:lj}{NewLine}{Exception}";
-
-        cfg.MinimumLevel.Override("Microsoft", LogEventLevel.Warning)
-            .MinimumLevel.Override("Microsoft.EntityFrameworkCore", LogEventLevel.Information)
-            .WriteTo.Console(outputTemplate: outputLogFormat);
-    }
-);
+builder.Host.UseSerilog((context, cfg) => cfg.ReadFrom.Configuration(context.Configuration));
 
 var app = builder.Build();
 

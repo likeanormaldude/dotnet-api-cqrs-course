@@ -58,7 +58,38 @@ git push -u origin master
 yarn install
 ```
 
-
+## AppConfig.development.json
+Must have among the properties. They should not be versioned though.
+```json
+"ConnectionStrings": {
+  "RestaurantsDb": "Server=localhost;Database=RestaurantsDb;Trusted_Connection=True;TrustServerCertificate=True;"
+},
+"Serilog": {
+  "MinimumLevel": {
+    "Override": {
+      "Microsoft": "Warning",
+      "Microsoft.EntityFrameworkCore": "Information"
+    }
+  },
+  "WriteTo": [
+    {
+      "Name": "Console",
+      "Args": {
+        "outputTemplate": "[{Timestamp: yyyy-MM-ddTHH:mm:ss} {Level:u3}] |{SourceContext}| {NewLine}{Message:lj}{NewLine}{Exception}"
+      }
+    },
+    {
+      "Name": "File",
+      "Args": {
+        "path": "Logs/Restaurant-Api-.log",
+        "rollingInterval": "Day",
+        "rollOnFileSizeLimit": true,
+        "formatter": "Serilog.Formatting.Compact.CompactJsonFormatter, Serilog.Formatting.Compact"
+      }
+    }
+  ]
+}
+```
 
 
 [//]: # (Links)
