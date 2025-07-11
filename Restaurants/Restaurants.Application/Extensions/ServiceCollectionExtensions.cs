@@ -3,7 +3,7 @@ using Mapster;
 using MapsterMapper;
 using Microsoft.Extensions.DependencyInjection;
 using Restaurants.Application.Dishes.Dtos;
-using Restaurants.Application.Restaurants;
+using Restaurants.Application.Restaurants.Commands.CreateRestaurant;
 using Restaurants.Application.Restaurants.Dtos;
 using Restaurants.Domain.Entities;
 
@@ -13,10 +13,13 @@ public static class ServiceCollectionExtensions
 {
     public static void AddApplication(this IServiceCollection services)
     {
-        services.AddScoped<IRestaurantsService, RestaurantsService>();
+        //Assembly applicationAssembly = typeof(ServiceCollectionExtensions).Assembly;
+        Type applicationType = typeof(ServiceCollectionExtensions);
+
         services.AddSingleton(GetMappingConfigs());
         services.AddScoped<IMapper, ServiceMapper>();
-        services.AddValidatorsFromAssemblyContaining(typeof(RestaurantsService));
+        services.AddValidatorsFromAssemblyContaining(applicationType);
+        //services.AddMediatR(cfg => cfg.RegisterServicesFromAssembly(typeof(ServiceCollectionExtensions).Assembly));
     }
 
     private static TypeAdapterConfig GetMappingConfigs()
@@ -32,7 +35,7 @@ public static class ServiceCollectionExtensions
             .Map(dest => dest.Dishes, src => src.Dishes);
 
         config
-            .NewConfig<CreateRestaurantDto, Restaurant>()
+            .NewConfig<CreateRestaurantCommand, Restaurant>()
             .Map(dest => dest.Address.City, src => src.City)
             .Map(dest => dest.Address.Street, src => src.Street)
             .Map(dest => dest.Address.PostalCode, src => src.PostalCode)
