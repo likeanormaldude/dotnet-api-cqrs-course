@@ -1,9 +1,11 @@
 ﻿using FluentValidation;
+using FluentValidation.Results;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
 using Restaurants.Application.Extensions;
 using Restaurants.Application.Restaurants.Commands.CreateRestaurant;
 using Restaurants.Application.Restaurants.Commands.DeleteRestaurant;
+using Restaurants.Application.Restaurants.Commands.UpdateRestaurant;
 using Restaurants.Application.Restaurants.Dtos;
 using Restaurants.Application.Restaurants.Queries.GetAllRestaurants;
 using Restaurants.Application.Restaurants.Queries.GetRestaurantById;
@@ -12,8 +14,11 @@ namespace Restaurants.API.Controllers;
 
 [ApiController]
 [Route("api/restaurants")]
-public class RestaurantsController(IMediator mediator, IValidator<CreateRestaurantCommand> createValidator)
-    : ControllerBase
+public class RestaurantsController(
+    IMediator mediator,
+    IValidator<CreateRestaurantCommand> createValidator,
+    IValidator<UpdateRestaurantCommand> updateValidator
+) : ControllerBase
 {
     [HttpGet]
     public async Task<IActionResult> GetAll()
@@ -41,7 +46,7 @@ public class RestaurantsController(IMediator mediator, IValidator<CreateRestaura
     [HttpPost]
     public async Task<IActionResult> CreateRestaurant(CreateRestaurantCommand command)
     {
-        var validationResults = await createValidator.ValidateAsync(command);
+        ValidationResult validationResults = await createValidator.ValidateAsync(command);
 
         if (!validationResults.IsValid)
             return BadRequest(validationResults.Errors.ToGroupedValidationErrors().MapOnlyErrorMessages());
@@ -58,6 +63,25 @@ public class RestaurantsController(IMediator mediator, IValidator<CreateRestaura
         bool isDeleted = await mediator.Send(command);
 
         if (isDeleted)
+        {
+            return NoContent();
+        }
+
+        return NotFound();
+    }
+
+    [HttpPatch("{id}")]
+    public async Task<IActionResult> UpdateRestaurant([FromRoute] int id, [FromBody] UpdateRestaurantCommand command)
+    {
+        command.Id = id;
+        ValidationResult validationResults = await updateValidator.ValidateAsync(command);
+
+        if (!validationResults.IsValid)
+            return BadRequest(validationResults.Errors.ToGroupedValidationErrors().MapOnlyErrorMessages());
+
+        bool isUpdated = await mediator.Send(command);
+
+        if (isUpdated)
         {
             return NoContent();
         }

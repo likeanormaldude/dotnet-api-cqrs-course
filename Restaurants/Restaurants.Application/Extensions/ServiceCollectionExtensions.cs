@@ -4,6 +4,7 @@ using MapsterMapper;
 using Microsoft.Extensions.DependencyInjection;
 using Restaurants.Application.Dishes.Dtos;
 using Restaurants.Application.Restaurants.Commands.CreateRestaurant;
+using Restaurants.Application.Restaurants.Commands.UpdateRestaurant;
 using Restaurants.Application.Restaurants.Dtos;
 using Restaurants.Domain.Entities;
 
@@ -27,6 +28,7 @@ public static class ServiceCollectionExtensions
         var config = TypeAdapterConfig.GlobalSettings;
 
         config.NewConfig<Dish, DishDto>();
+        config.NewConfig<DishDto, Dish>();
         config
             .NewConfig<Restaurant, RestaurantDto>()
             .Map(dest => dest.City, src => src.Address != null ? src.Address.City : "")
@@ -36,6 +38,13 @@ public static class ServiceCollectionExtensions
 
         config
             .NewConfig<CreateRestaurantCommand, Restaurant>()
+            .Map(dest => dest.Address.City, src => src.City)
+            .Map(dest => dest.Address.Street, src => src.Street)
+            .Map(dest => dest.Address.PostalCode, src => src.PostalCode)
+            .Map(dest => dest.Dishes, src => src.Dishes);
+
+        config
+            .NewConfig<UpdateRestaurantCommand, Restaurant>()
             .Map(dest => dest.Address.City, src => src.City)
             .Map(dest => dest.Address.Street, src => src.Street)
             .Map(dest => dest.Address.PostalCode, src => src.PostalCode)
