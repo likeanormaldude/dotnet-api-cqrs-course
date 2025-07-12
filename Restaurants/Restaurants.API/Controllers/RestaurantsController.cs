@@ -34,13 +34,7 @@ public class RestaurantsController(
     public async Task<ActionResult<RestaurantDto?>> GetById([FromRoute] int id)
     {
         GetRestaurantByIdQuery query = new(id);
-        RestaurantDto? restaurant = await mediator.Send(query);
-
-        if (restaurant == null)
-        {
-            return NotFound($"Restaurant with id {id} could not be found.");
-        }
-
+        RestaurantDto restaurant = await mediator.Send(query);
         return Ok(restaurant);
     }
 
@@ -85,13 +79,8 @@ public class RestaurantsController(
         if (!validationResults.IsValid)
             return BadRequest(validationResults.Errors.ToGroupedValidationErrors().MapOnlyErrorMessages());
 
-        bool isUpdated = await mediator.Send(command);
+        await mediator.Send(command);
 
-        if (isUpdated)
-        {
-            return NoContent();
-        }
-
-        return NotFound();
+        return NoContent();
     }
 }

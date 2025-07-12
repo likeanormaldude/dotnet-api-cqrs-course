@@ -3,7 +3,7 @@ using Restaurants.Application.Dishes.Dtos;
 
 namespace Restaurants.Application.Restaurants.Commands.UpdateRestaurant;
 
-public class UpdateRestaurantCommand(int id) : IRequest<bool>
+public class UpdateRestaurantCommand(int id) : IRequest
 {
     public int Id { get; set; } = id;
     public string Name { get; set; } = string.Empty;

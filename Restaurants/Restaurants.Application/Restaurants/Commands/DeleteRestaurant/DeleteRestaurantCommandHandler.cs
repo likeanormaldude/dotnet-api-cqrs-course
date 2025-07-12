@@ -1,5 +1,7 @@
 ﻿using MediatR;
 using Microsoft.Extensions.Logging;
+using Restaurants.Domain.Entities;
+using Restaurants.Domain.Exceptions;
 using Restaurants.Domain.Repositories;
 
 namespace Restaurants.Application.Restaurants.Commands.DeleteRestaurant;
@@ -17,7 +19,7 @@ public class DeleteRestaurantCommandHandler(
 
         if (restaurant is null)
         {
-            return false;
+            throw new NotFoundException(nameof(Restaurant), request.Id.ToString());
         }
 
         await restaurantsRepository.Delete(restaurant!);
