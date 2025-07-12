@@ -18,6 +18,7 @@ builder.Services.AddMediatR(cfg =>
 builder.Services.AddSwaggerGen();
 
 builder.Services.AddScoped<ErrorHandlingMiddleware>();
+builder.Services.AddScoped<RequestTimeLoggingMiddleware>();
 
 builder.Services.AddControllers();
 builder.Services.AddApplication();
@@ -37,6 +38,7 @@ app.UseAuthorization();
 app.MapControllers();
 app.UseSerilogRequestLogging();
 app.UseMiddleware<ErrorHandlingMiddleware>();
+app.UseMiddleware<RequestTimeLoggingMiddleware>();
 
 if (app.Environment.IsDevelopment())
 {
