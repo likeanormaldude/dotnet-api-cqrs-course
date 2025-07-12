@@ -2,6 +2,7 @@
 using Mapster;
 using MapsterMapper;
 using Microsoft.Extensions.DependencyInjection;
+using Restaurants.Application.Dishes.Commands.CreateDish;
 using Restaurants.Application.Dishes.Dtos;
 using Restaurants.Application.Restaurants.Commands.CreateRestaurant;
 using Restaurants.Application.Restaurants.Commands.UpdateRestaurant;
@@ -28,6 +29,7 @@ public static class ServiceCollectionExtensions
         var config = TypeAdapterConfig.GlobalSettings;
 
         config.NewConfig<Dish, DishDto>();
+        config.NewConfig<CreateDishCommand, Dish>();
         config.NewConfig<DishDto, Dish>();
         config
             .NewConfig<Restaurant, RestaurantDto>()
