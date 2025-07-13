@@ -26,8 +26,6 @@ public class CreateDishCommandHandler(
         }
 
         Dish dish = mapper.Map<Dish>(request);
-        await dishesRepository.Create(dish);
-
-        return dish.Id;
+        return await dishesRepository.Create(dish);
     }
 }

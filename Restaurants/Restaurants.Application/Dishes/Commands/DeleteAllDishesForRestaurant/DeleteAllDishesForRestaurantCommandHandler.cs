@@ -8,12 +8,13 @@ namespace Restaurants.Application.Dishes.Commands.DeleteAllDishesForRestaurant;
 
 public class DeleteAllDishesForRestaurantCommandHandler(
     ILogger<DeleteAllDishesForRestaurantCommandHandler> logger,
-    IRestaurantsRepository restaurantsRepository
+    IRestaurantsRepository restaurantsRepository,
+    IDishesRepository dishesRepository
 ) : IRequestHandler<DeleteAllDishesForRestaurantCommand, bool>
 {
     public async Task<bool> Handle(DeleteAllDishesForRestaurantCommand request, CancellationToken cancellationToken)
     {
-        logger.LogInformation("Deleting all dishes belonging to restaurant ({RestaurantId})", request.RestaurantId);
+        logger.LogInformation("Removing all dishes belonging to restaurant ({RestaurantId})", request.RestaurantId);
 
         var restaurant = await restaurantsRepository.GetByIdAsync(request.RestaurantId);
 
@@ -24,8 +25,7 @@ public class DeleteAllDishesForRestaurantCommandHandler(
 
         if (restaurant.Dishes.Any())
         {
-            restaurant.Dishes = [];
-            await restaurantsRepository.SaveChanges();
+            await dishesRepository.Delete(restaurant.Dishes);
         }
 
         return true;

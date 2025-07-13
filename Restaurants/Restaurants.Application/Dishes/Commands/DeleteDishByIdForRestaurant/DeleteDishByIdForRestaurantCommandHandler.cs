@@ -8,7 +8,8 @@ namespace Restaurants.Application.Dishes.Commands.DeleteDishByIdForRestaurant;
 
 internal class DeleteDishByIdForRestaurantCommandHandler(
     ILogger<DeleteDishByIdForRestaurantCommandHandler> logger,
-    IRestaurantsRepository restaurantsRepository
+    IRestaurantsRepository restaurantsRepository,
+    IDishesRepository dishesRepository
 ) : IRequestHandler<DeleteDishByIdForRestaurantCommand, bool>
 {
     public async Task<bool> Handle(DeleteDishByIdForRestaurantCommand request, CancellationToken cancellationToken)
@@ -34,9 +35,7 @@ internal class DeleteDishByIdForRestaurantCommandHandler(
             throw new NotFoundException(nameof(Dish), request.DishId.ToString());
         }
 
-        restaurant.Dishes.RemoveAt(index);
-        await restaurantsRepository.SaveChanges();
-
+        await dishesRepository.Delete(restaurant.Dishes[index]);
         return true;
     }
 }

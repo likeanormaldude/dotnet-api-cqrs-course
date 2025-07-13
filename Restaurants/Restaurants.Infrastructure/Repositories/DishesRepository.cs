@@ -12,4 +12,16 @@ internal class DishesRepository(RestaurantsDbContext dbContext) : IDishesReposit
         await dbContext.SaveChangesAsync();
         return entity.Id;
     }
+
+    public async Task Delete(Dish entity)
+    {
+        dbContext.Dishes.Remove(entity);
+        await dbContext.SaveChangesAsync();
+    }
+
+    public async Task Delete(IEnumerable<Dish> entities)
+    {
+        dbContext.Dishes.RemoveRange(entities);
+        await dbContext.SaveChangesAsync();
+    }
 }
