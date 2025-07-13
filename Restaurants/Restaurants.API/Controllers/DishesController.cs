@@ -1,12 +1,16 @@
-﻿using FluentValidation;
-using MediatR;
+﻿using MediatR;
 using Microsoft.AspNetCore.Mvc;
 using Restaurants.Application.Dishes.Commands.CreateDish;
+using Restaurants.Application.Dishes.Commands.DeleteAllDishesForRestaurant;
+using Restaurants.Application.Dishes.Commands.DeleteDishByIdForRestaurant;
+using Restaurants.Application.Dishes.Dtos;
+using Restaurants.Application.Dishes.Queries.GetDishByIdForRestaurant;
+using Restaurants.Application.Dishes.Queries.GetDishesForRestaurant;
 
 namespace Restaurants.API.Controllers;
 
 [Route("api/restaurants/{restaurantId}/dishes")]
-public class DishesController(IMediator mediator, IValidator<CreateDishCommand> createValidator) : ControllerBase
+public class DishesController(IMediator mediator) : ControllerBase
 {
     [HttpPost]
     public async Task<IActionResult> CreateDish([FromRoute] int restaurantId, [FromBody] CreateDishCommand command)
@@ -14,5 +18,48 @@ public class DishesController(IMediator mediator, IValidator<CreateDishCommand> 
         command.RestaurantId = restaurantId;
         await mediator.Send(command);
         return Created();
+    }
+
+    [HttpGet]
+    public async Task<ActionResult<IEnumerable<DishDto>>> GetAllForRestaurant([FromRoute] int restaurantId)
+    {
+        IEnumerable<DishDto> dishes = await mediator.Send(new GetDishesForRestaurantQuery(restaurantId));
+
+        return Ok(dishes);
+    }
+
+    [HttpGet("{dishId}")]
+    public async Task<ActionResult<DishDto>> GetByIdForRestaurant([FromRoute] int restaurantId, [FromRoute] int dishId)
+    {
+        DishDto dish = await mediator.Send(new GetDishByIdForRestaurantQuery(restaurantId, dishId));
+        return Ok(dish);
+    }
+
+    [HttpDelete]
+    public async Task<IActionResult> DeleteAllDishesForRestaurant([FromRoute] int restaurantId)
+    {
+        var command = new DeleteAllDishesForRestaurantCommand(restaurantId);
+        bool isDeleted = await mediator.Send(command);
+
+        if (isDeleted)
+        {
+            return NoContent();
+        }
+
+        return BadRequest("Dish not found or could not be deleted.");
+    }
+
+    [HttpDelete("{dishId}")]
+    public async Task<IActionResult> DeleteDishByIdForRestaurant([FromRoute] int restaurantId, [FromRoute] int dishId)
+    {
+        var command = new DeleteDishByIdForRestaurantCommand(restaurantId, dishId);
+        bool isDeleted = await mediator.Send(command);
+
+        if (isDeleted)
+        {
+            return NoContent();
+        }
+
+        return BadRequest("Dish not found or could not be deleted.");
     }
 }
