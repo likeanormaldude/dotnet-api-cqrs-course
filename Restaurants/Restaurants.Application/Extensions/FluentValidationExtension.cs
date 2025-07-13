@@ -1,10 +1,12 @@
-﻿using FluentValidation.Results;
+﻿using FluentValidation;
+using FluentValidation.Results;
 using Restaurants.Application.Models;
 
 namespace Restaurants.Application.Extensions;
 
 public static class FluentValidationExtension
 {
+    #region GroupedValidationFailure extensions
     public static IEnumerable<GroupedValidationFailure> ToGroupedValidationErrors(
         this IEnumerable<ValidationFailure> errors
     ) => errors.GroupBy(e => e.PropertyName).Select(ToGroupedValidationError);
@@ -23,4 +25,12 @@ public static class FluentValidationExtension
     public static List<string> MapOnlyErrorMessages(
         this IEnumerable<GroupedValidationFailure> groupedValidationFailures
     ) => groupedValidationFailures.SelectMany(x => x.ErrorMessages).ToList();
+    #endregion
+
+    #region ValidationException extensions
+
+    public static IEnumerable<GroupedValidationFailure> ToGroupedValidationErrors(
+        this ValidationException validationException
+    ) => validationException.Errors.GroupBy(e => e.PropertyName).Select(g => ToGroupedValidationError(g!));
+    #endregion
 }

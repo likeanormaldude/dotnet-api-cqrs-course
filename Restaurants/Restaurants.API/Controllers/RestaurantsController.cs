@@ -1,9 +1,6 @@
-﻿using FluentValidation;
-using FluentValidation.Results;
-using MediatR;
+﻿using MediatR;
 using Microsoft.AspNetCore.Mvc;
 using Restaurants.API.Models;
-using Restaurants.Application.Extensions;
 using Restaurants.Application.Restaurants.Commands.CreateRestaurant;
 using Restaurants.Application.Restaurants.Commands.DeleteRestaurant;
 using Restaurants.Application.Restaurants.Commands.UpdateRestaurant;
@@ -15,11 +12,7 @@ namespace Restaurants.API.Controllers;
 
 [ApiController]
 [Route("api/restaurants")]
-public class RestaurantsController(
-    IMediator mediator,
-    IValidator<CreateRestaurantCommand> createValidator,
-    IValidator<UpdateRestaurantCommand> updateValidator
-) : ControllerBase
+public class RestaurantsController(IMediator mediator) : ControllerBase
 {
     [HttpGet]
     public async Task<ActionResult<IEnumerable<RestaurantDto>>> GetAll()
@@ -41,14 +34,8 @@ public class RestaurantsController(
     [HttpPost]
     public async Task<ActionResult<CreateRestaurantResponseModel>> CreateRestaurant(CreateRestaurantCommand command)
     {
-        ValidationResult validationResults = await createValidator.ValidateAsync(command);
-
-        if (!validationResults.IsValid)
-            return BadRequest(validationResults.Errors.ToGroupedValidationErrors().MapOnlyErrorMessages());
-
         int id = await mediator.Send(command);
         CreateRestaurantResponseModel response = new(id);
-
         return CreatedAtAction(nameof(GetById), new { id }, response);
     }
 
@@ -74,13 +61,7 @@ public class RestaurantsController(
     public async Task<ActionResult> UpdateRestaurant([FromRoute] int id, [FromBody] UpdateRestaurantCommand command)
     {
         command.Id = id;
-        ValidationResult validationResults = await updateValidator.ValidateAsync(command);
-
-        if (!validationResults.IsValid)
-            return BadRequest(validationResults.Errors.ToGroupedValidationErrors().MapOnlyErrorMessages());
-
         await mediator.Send(command);
-
         return NoContent();
     }
 }

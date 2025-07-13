@@ -1,3 +1,5 @@
+using MediatR;
+using Restaurants.API.Behaviors;
 using Restaurants.API.Middlewares;
 using Restaurants.Application.Extensions;
 using Restaurants.Application.Restaurants.Queries.GetAllRestaurants;
@@ -19,6 +21,8 @@ builder.Services.AddSwaggerGen();
 
 builder.Services.AddScoped<ErrorHandlingMiddleware>();
 builder.Services.AddScoped<RequestTimeLoggingMiddleware>();
+builder.Services.AddScoped<ValidationExceptionMiddleware>();
+builder.Services.AddTransient(typeof(IPipelineBehavior<,>), typeof(ValidationBehavior<,>));
 
 builder.Services.AddControllers();
 builder.Services.AddApplication();
@@ -39,6 +43,7 @@ app.MapControllers();
 app.UseSerilogRequestLogging();
 app.UseMiddleware<ErrorHandlingMiddleware>();
 app.UseMiddleware<RequestTimeLoggingMiddleware>();
+app.UseMiddleware<ValidationExceptionMiddleware>();
 
 if (app.Environment.IsDevelopment())
 {
