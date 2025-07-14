@@ -47,6 +47,8 @@ public static class WebApplicationBuilderExtensions
                     },
                 }
             );
+
+            builder.Services.AddAuthentication();
         });
 
         builder.Services.AddScoped<ErrorHandlingMiddleware>();

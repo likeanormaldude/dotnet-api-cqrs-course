@@ -15,13 +15,9 @@ public static class ServiceCollectionExtensions
 {
     public static void AddApplication(this IServiceCollection services)
     {
-        //Assembly applicationAssembly = typeof(ServiceCollectionExtensions).Assembly;
-        Type applicationType = typeof(ServiceCollectionExtensions);
-
         services.AddSingleton(GetMappingConfigs());
         services.AddScoped<IMapper, ServiceMapper>();
-        services.AddValidatorsFromAssemblyContaining(applicationType);
-        //services.AddMediatR(cfg => cfg.RegisterServicesFromAssembly(typeof(ServiceCollectionExtensions).Assembly));
+        services.AddValidatorsFromAssemblyContaining(typeof(ServiceCollectionExtensions));
     }
 
     private static TypeAdapterConfig GetMappingConfigs()
