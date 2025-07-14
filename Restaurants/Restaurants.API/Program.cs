@@ -3,7 +3,9 @@ using Restaurants.API.Behaviors;
 using Restaurants.API.Middlewares;
 using Restaurants.Application.Extensions;
 using Restaurants.Application.Restaurants.Queries.GetAllRestaurants;
+using Restaurants.Domain.Entities;
 using Restaurants.Infrastructure.Extensions;
+using Restaurants.Infrastructure.Persistence;
 using Restaurants.Infrastructure.Seeders;
 using Serilog;
 
@@ -23,6 +25,7 @@ builder.Services.AddScoped<ErrorHandlingMiddleware>();
 builder.Services.AddScoped<RequestTimeLoggingMiddleware>();
 builder.Services.AddScoped<ValidationExceptionMiddleware>();
 builder.Services.AddTransient(typeof(IPipelineBehavior<,>), typeof(ValidationBehavior<,>));
+builder.Services.AddIdentityApiEndpoints<User>().AddEntityFrameworkStores<RestaurantsDbContext>();
 
 builder.Services.AddControllers();
 builder.Services.AddApplication();
@@ -44,6 +47,7 @@ app.UseSerilogRequestLogging();
 app.UseMiddleware<ErrorHandlingMiddleware>();
 app.UseMiddleware<RequestTimeLoggingMiddleware>();
 app.UseMiddleware<ValidationExceptionMiddleware>();
+app.MapIdentityApi<User>();
 
 if (app.Environment.IsDevelopment())
 {
