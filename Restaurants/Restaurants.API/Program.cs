@@ -1,4 +1,5 @@
 using MediatR;
+using Microsoft.OpenApi.Models;
 using Restaurants.API.Behaviors;
 using Restaurants.API.Middlewares;
 using Restaurants.Application.Extensions;
@@ -19,7 +20,32 @@ builder.Services.AddMediatR(cfg =>
     cfg.LicenseKey = builder.Configuration["MediatR:LicenseKey"];
 });
 
-builder.Services.AddSwaggerGen();
+builder.Services.AddSwaggerGen(cfg =>
+{
+    string securityDefinitionId = "bearerAuth";
+
+    cfg.AddSecurityDefinition(
+        securityDefinitionId,
+        new OpenApiSecurityScheme() { Type = SecuritySchemeType.Http, Scheme = "Bearer" }
+    );
+
+    cfg.AddSecurityRequirement(
+        new OpenApiSecurityRequirement()
+        {
+            {
+                new OpenApiSecurityScheme()
+                {
+                    Reference = new OpenApiReference()
+                    {
+                        Type = ReferenceType.SecurityScheme,
+                        Id = securityDefinitionId,
+                    },
+                },
+                []
+            },
+        }
+    );
+});
 
 builder.Services.AddScoped<ErrorHandlingMiddleware>();
 builder.Services.AddScoped<RequestTimeLoggingMiddleware>();
@@ -47,7 +73,7 @@ app.UseSerilogRequestLogging();
 app.UseMiddleware<ErrorHandlingMiddleware>();
 app.UseMiddleware<RequestTimeLoggingMiddleware>();
 app.UseMiddleware<ValidationExceptionMiddleware>();
-app.MapIdentityApi<User>();
+app.MapGroup("api/identity").MapIdentityApi<User>();
 
 if (app.Environment.IsDevelopment())
 {
