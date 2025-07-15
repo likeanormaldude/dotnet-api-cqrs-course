@@ -7,6 +7,7 @@ using Restaurants.Application.Dishes.Dtos;
 using Restaurants.Application.Restaurants.Commands.CreateRestaurant;
 using Restaurants.Application.Restaurants.Commands.UpdateRestaurant;
 using Restaurants.Application.Restaurants.Dtos;
+using Restaurants.Application.Users;
 using Restaurants.Domain.Entities;
 
 namespace Restaurants.Application.Extensions;
@@ -18,6 +19,8 @@ public static class ServiceCollectionExtensions
         services.AddSingleton(GetMappingConfigs());
         services.AddScoped<IMapper, ServiceMapper>();
         services.AddValidatorsFromAssemblyContaining(typeof(ServiceCollectionExtensions));
+        services.AddScoped<IUserContext, UserContext>();
+        services.AddHttpContextAccessor();
     }
 
     private static TypeAdapterConfig GetMappingConfigs()
