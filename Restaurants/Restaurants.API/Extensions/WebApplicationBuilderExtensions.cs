@@ -1,4 +1,5 @@
 ﻿using MediatR;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.OpenApi.Models;
 using Restaurants.API.Behaviors;
 using Restaurants.API.Middlewares;
@@ -56,7 +57,11 @@ public static class WebApplicationBuilderExtensions
         builder.Services.AddScoped<ValidationExceptionMiddleware>();
         builder.Services.AddTransient(typeof(IPipelineBehavior<,>), typeof(ValidationBehavior<,>));
 
-        builder.Services.AddIdentityApiEndpoints<User>().AddEntityFrameworkStores<RestaurantsDbContext>();
+        builder
+            .Services.AddIdentityApiEndpoints<User>()
+            .AddRoles<IdentityRole>()
+            .AddEntityFrameworkStores<RestaurantsDbContext>();
+
         builder.Host.UseSerilog((context, cfg) => cfg.ReadFrom.Configuration(context.Configuration));
     }
 }

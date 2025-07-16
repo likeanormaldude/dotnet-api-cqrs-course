@@ -1,0 +1,39 @@
+[
+  {
+    "Name": "KFC",
+    "Category": "Fast Food",
+    "Description": "KFC (short for Kentucky Fried Chicken) is an American fast food restaurant chain headquarters",
+    "ContactEmail": "contact@kfc.com",
+    "HasDelivery": true,
+    "Dishes": [
+      {
+        "Name": "Nashville Hot Chicken",
+        "Description": "Nashville Hot Chicken (10 pcs.)",
+        "Price": 10.30
+      },
+      {
+        "Name": "Chicken Nuggets",
+        "Description": "Chicken Nuggets (5 pcs.)",
+        "Price": 5.30
+      }
+    ],
+    "Address": {
+      "City": "London",
+      "Street": "Cork St 5",
+      "PostalCode": "WC2N 5DU"
+    }
+  },
+  {
+    "Name": "McDonald's Szewska",
+    "Category": "Fast Food",
+    "Description": "Mcdonald's Corporation  (McDonald's), incorporated on December 21, 1964 operates and franchise a network of fast food",
+    "ContactEmail": "contact@mcdonald.com",
+    "HasDelivery": true,
+    "Dishes": [],
+    "Address": {
+      "City": "London",
+      "Street": "Boots 193",
+      "PostalCode": "W1F 8SR"
+    }
+  }
+]

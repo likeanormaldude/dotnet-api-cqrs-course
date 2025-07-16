@@ -4,7 +4,7 @@ using Restaurants.Application.Models;
 
 namespace Restaurants.Application.Extensions;
 
-public static class FluentValidationExtension
+public static class FluentValidationExtensions
 {
     #region GroupedValidationFailure extensions
     public static IEnumerable<GroupedValidationFailure> ToGroupedValidationErrors(
