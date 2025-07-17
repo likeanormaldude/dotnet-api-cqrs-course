@@ -18,7 +18,12 @@ public static class RestaurantSeederService
 
     public static IEnumerable<IdentityRole> GetRoles()
     {
-        IEnumerable<IdentityRole> roles = [new(UserRoles.User), new(UserRoles.Owner), new(UserRoles.Admin)];
+        IEnumerable<IdentityRole> roles =
+        [
+            new(UserRoles.User) { NormalizedName = UserRoles.User.ToUpperInvariant() },
+            new(UserRoles.Owner) { NormalizedName = UserRoles.Owner.ToUpperInvariant() },
+            new(UserRoles.Admin) { NormalizedName = UserRoles.Admin.ToUpperInvariant() },
+        ];
 
         return roles;
     }
