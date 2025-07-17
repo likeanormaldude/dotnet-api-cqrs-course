@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Restaurants.Application.Users.Commands.AssignUserRole;
 using Restaurants.Application.Users.Commands.UpdateUserDetails;
+using Restaurants.Application.Users.Queries.GetUserRolesQuery;
 using Restaurants.Domain.Constants;
 
 namespace Restaurants.API.Controllers;
@@ -27,11 +28,12 @@ public class IdentityController(IMediator mediator) : ControllerBase
         return NoContent();
     }
 
-    /*[HttpGet("userRole")]
+    [HttpGet("userRole/{username}")]
     [Authorize(Roles = UserRoles.Admin)]
-    public async Task<ActionResult<IEnumerable<UserRoles>>> GetUserRoles(AssignUserRoleCommand command)
+    public async Task<ActionResult<IEnumerable<string>>> GetUserRoles([FromRoute] string username)
     {
-        await mediator.Send(command);
-        return NoContent();
-    }*/
+        GetUserRolesQuery query = new(username);
+        IEnumerable<string> userRoles = await mediator.Send(query);
+        return Ok(userRoles);
+    }
 }
