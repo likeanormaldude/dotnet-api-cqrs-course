@@ -2,6 +2,7 @@
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Restaurants.Application.Users.Commands.AssignUserRole;
+using Restaurants.Application.Users.Commands.UnassignRoleFromUser;
 using Restaurants.Application.Users.Commands.UpdateUserDetails;
 using Restaurants.Application.Users.Queries.GetUserRolesQuery;
 using Restaurants.Domain.Constants;
@@ -35,5 +36,19 @@ public class IdentityController(IMediator mediator) : ControllerBase
         GetUserRolesQuery query = new(username);
         IEnumerable<string> userRoles = await mediator.Send(query);
         return Ok(userRoles);
+    }
+
+    [HttpDelete("userRole")]
+    [Authorize(Roles = UserRoles.Admin)]
+    public async Task<ActionResult<IEnumerable<string>>> UnassignRoleFromUser(UnassignRoleFromUserCommand command)
+    {
+        bool isUnassigned = await mediator.Send(command);
+
+        if (isUnassigned)
+        {
+            return NoContent();
+        }
+
+        return NotFound("User or role was not found.");
     }
 }
