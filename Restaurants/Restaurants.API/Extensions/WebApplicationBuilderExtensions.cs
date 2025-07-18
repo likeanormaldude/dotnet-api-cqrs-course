@@ -65,5 +65,9 @@ public static class WebApplicationBuilderExtensions
             .AddEntityFrameworkStores<RestaurantsDbContext>();
 
         builder.Host.UseSerilog((context, cfg) => cfg.ReadFrom.Configuration(context.Configuration));
+
+        builder
+            .Services.AddAuthorizationBuilder()
+            .AddPolicy(PolicyNames.HasNationality, builder => builder.RequireClaim(AppClaimTypes.Nationality));
     }
 }
