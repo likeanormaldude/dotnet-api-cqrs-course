@@ -1,4 +1,5 @@
 ﻿using MediatR;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.OpenApi.Models;
 using Restaurants.API.Behaviors;
@@ -6,6 +7,7 @@ using Restaurants.API.Middlewares;
 using Restaurants.Application.Restaurants.Queries.GetAllRestaurants;
 using Restaurants.Domain.Entities;
 using Restaurants.Infrastructure.Authorization;
+using Restaurants.Infrastructure.Authorization.Requirements;
 using Restaurants.Infrastructure.Persistence;
 using Serilog;
 
@@ -68,6 +70,12 @@ public static class WebApplicationBuilderExtensions
 
         builder
             .Services.AddAuthorizationBuilder()
-            .AddPolicy(PolicyNames.HasNationality, builder => builder.RequireClaim(AppClaimTypes.Nationality));
+            .AddPolicy(
+                PolicyNames.HasNationality,
+                builder => builder.RequireClaim(AppClaimTypes.Nationality, "Brazilian")
+            )
+            .AddPolicy(PolicyNames.AtLeast20, builder => builder.AddRequirements(new MinimumAgeRequirement(20)));
+
+        builder.Services.AddScoped<IAuthorizationHandler, MinimumAgeRequirementHandler>();
     }
 }

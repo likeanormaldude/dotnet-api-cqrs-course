@@ -30,6 +30,11 @@ public class UserContext(IHttpContextAccessor httpContextAccessor) : IUserContex
         string email = user.FindFirst(x => x.Type == ClaimTypes.Email)!.Value;
         IEnumerable<string> roles = user.Claims.Where(x => x.Type == ClaimTypes.Role)!.Select(x => x.Value);
 
-        return new CurrentUser(userId, email, roles);
+        var nationality = user.FindFirst(x => x.Type == "Nationality")?.Value;
+        var dateOfBirthString = user.FindFirst(x => x.Type == "DateOfBirth")?.Value;
+        var dateOfBirth =
+            dateOfBirthString == null ? (DateOnly?)null : DateOnly.ParseExact(dateOfBirthString, "yyyy-MM-dd");
+
+        return new CurrentUser(userId, email, roles, nationality, dateOfBirth);
     }
 }
