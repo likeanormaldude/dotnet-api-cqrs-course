@@ -5,6 +5,7 @@ using Restaurants.API.Behaviors;
 using Restaurants.API.Middlewares;
 using Restaurants.Application.Restaurants.Queries.GetAllRestaurants;
 using Restaurants.Domain.Entities;
+using Restaurants.Infrastructure.Authorization;
 using Restaurants.Infrastructure.Persistence;
 using Serilog;
 
@@ -60,6 +61,7 @@ public static class WebApplicationBuilderExtensions
         builder
             .Services.AddIdentityApiEndpoints<User>()
             .AddRoles<IdentityRole>()
+            .AddClaimsPrincipalFactory<RestaurantsUserClaimsPrincipalFactory>()
             .AddEntityFrameworkStores<RestaurantsDbContext>();
 
         builder.Host.UseSerilog((context, cfg) => cfg.ReadFrom.Configuration(context.Configuration));
