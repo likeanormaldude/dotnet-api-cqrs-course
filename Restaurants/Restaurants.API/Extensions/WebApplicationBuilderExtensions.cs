@@ -74,8 +74,13 @@ public static class WebApplicationBuilderExtensions
                 PolicyNames.HasNationality,
                 builder => builder.RequireClaim(AppClaimTypes.Nationality, "Brazilian")
             )
-            .AddPolicy(PolicyNames.AtLeast20, builder => builder.AddRequirements(new MinimumAgeRequirement(20)));
+            .AddPolicy(PolicyNames.AtLeast20, builder => builder.AddRequirements(new MinimumAgeRequirement(20)))
+            .AddPolicy(
+                PolicyNames.CreatedAtLeast2Restaurants,
+                builder => builder.AddRequirements(new CreatedMultipleRestaurantsRequirement(2))
+            );
 
         builder.Services.AddScoped<IAuthorizationHandler, MinimumAgeRequirementHandler>();
+        builder.Services.AddScoped<IAuthorizationHandler, CreatedMultipleRestaurantsRequirementHandler>();
     }
 }
