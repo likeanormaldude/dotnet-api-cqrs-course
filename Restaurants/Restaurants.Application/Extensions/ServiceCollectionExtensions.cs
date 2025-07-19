@@ -35,7 +35,8 @@ public static class ServiceCollectionExtensions
             .Map(dest => dest.City, src => src.Address != null ? src.Address.City : "")
             .Map(dest => dest.Street, src => src.Address != null ? src.Address.Street : "")
             .Map(dest => dest.PostalCode, src => src.Address != null ? src.Address.PostalCode : "")
-            .Map(dest => dest.Dishes, src => src.Dishes);
+            .Map(dest => dest.Dishes, src => src.Dishes)
+            .Map(dest => dest.Owner, src => src.Owner.UserName);
 
         config
             .NewConfig<CreateRestaurantCommand, Restaurant>()

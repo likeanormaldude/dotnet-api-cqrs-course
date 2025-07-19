@@ -16,7 +16,10 @@ internal class RestaurantsRepository(RestaurantsDbContext dbContext) : IRestaura
 
     public async Task<IEnumerable<Restaurant>> GetAllAsync()
     {
-        IEnumerable<Restaurant> restaurants = await dbContext.Restaurants.Include(x => x.Dishes).ToListAsync();
+        IEnumerable<Restaurant> restaurants = await dbContext
+            .Restaurants.Include(x => x.Dishes)
+            .Include(x => x.Owner)
+            .ToListAsync();
         return restaurants;
     }
 
@@ -24,6 +27,7 @@ internal class RestaurantsRepository(RestaurantsDbContext dbContext) : IRestaura
     {
         Restaurant? restaurant = await dbContext
             .Restaurants.Include(x => x.Dishes)
+            .Include(x => x.Owner)
             .Where(x => x.Id == id)
             .FirstOrDefaultAsync();
         return restaurant;
