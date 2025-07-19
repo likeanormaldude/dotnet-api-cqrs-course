@@ -18,6 +18,8 @@ namespace Restaurants.Infrastructure.Migrations
                 defaultValue: ""
             );
 
+            migrationBuilder.Sql("UPDATE Restaurants SET OwnerId = (SELECT TOP 1 Id FROM AspNetUsers)");
+
             migrationBuilder.CreateIndex(name: "IX_Restaurants_OwnerId", table: "Restaurants", column: "OwnerId");
 
             migrationBuilder.AddForeignKey(
