@@ -1,9 +1,12 @@
+using Microsoft.EntityFrameworkCore;
 using Restaurants.API.Extensions;
 using Restaurants.API.Middlewares;
 using Restaurants.Application.Extensions;
 using Restaurants.Domain.Entities;
 using Restaurants.Infrastructure.Extensions;
+using Restaurants.Infrastructure.Persistence;
 using Restaurants.Infrastructure.Seeders;
+using Restaurants.Infrastructure.Services;
 using Serilog;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -13,9 +16,16 @@ builder.Services.AddApplication();
 builder.Services.AddInfrastructure(builder.Configuration);
 
 var app = builder.Build();
-var scope = app.Services.CreateScope();
-var seeder = scope.ServiceProvider.GetRequiredService<IRestaurantSeeder>();
-await seeder.Seed();
+
+using (IServiceScope scope = app.Services.CreateScope())
+{
+    var dbContext = scope.ServiceProvider.GetRequiredService<RestaurantsDbContext>();
+    var seeder = scope.ServiceProvider.GetRequiredService<IRestaurantSeeder>();
+    dbContext.Database.Migrate(); // (optional, auto apply migrations)
+
+    var runner = new DataScriptRunner(dbContext, scope.ServiceProvider);
+    await runner.RunAllAsync();
+}
 
 // Configure the HTTP request pipeline.
 app.UseHttpsRedirection();
@@ -33,4 +43,4 @@ if (app.Environment.IsDevelopment())
     app.UseSwaggerUI();
 }
 
-app.Run();
+await app.RunAsync();
