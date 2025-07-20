@@ -8,6 +8,7 @@ public class RestaurantsDbContext(DbContextOptions<RestaurantsDbContext> options
 {
     internal DbSet<Restaurant> Restaurants { get; set; }
     internal DbSet<Dish> Dishes { get; set; }
+    internal DbSet<DataScriptHistory> DataScriptHistories { get; set; }
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
