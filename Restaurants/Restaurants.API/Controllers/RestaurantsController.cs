@@ -2,6 +2,7 @@
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Restaurants.API.Models;
+using Restaurants.Application.Common;
 using Restaurants.Application.Restaurants.Commands.CreateRestaurant;
 using Restaurants.Application.Restaurants.Commands.DeleteRestaurant;
 using Restaurants.Application.Restaurants.Commands.UpdateRestaurant;
@@ -22,7 +23,7 @@ public class RestaurantsController(IMediator mediator) : ControllerBase
     //[Authorize(Policy = PolicyNames.CreatedAtLeast2Restaurants)]
     public async Task<ActionResult<IEnumerable<RestaurantDto>>> GetAll([FromQuery] GetAllRestaurantsQuery query)
     {
-        IEnumerable<RestaurantDto> restaurants = await mediator.Send(query);
+        PagedResult<RestaurantDto> restaurants = await mediator.Send(query);
         return Ok(restaurants);
     }
 
