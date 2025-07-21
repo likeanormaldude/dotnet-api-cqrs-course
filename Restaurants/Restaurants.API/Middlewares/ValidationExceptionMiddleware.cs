@@ -22,7 +22,7 @@ public class ValidationExceptionMiddleware(ILogger<ValidationExceptionMiddleware
 
             context.Response.StatusCode = StatusCodes.Status400BadRequest;
             context.Response.ContentType = "application/json";
-            await context.Response.WriteAsJsonAsync(ex.Errors.ToGroupedValidationErrors());
+            await context.Response.WriteAsJsonAsync(ex.Errors.ToGroupedValidationErrors().MapOnlyErrorMessages());
         }
     }
 }
