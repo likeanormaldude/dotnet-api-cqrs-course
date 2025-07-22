@@ -1,4 +1,6 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using System.Linq.Expressions;
+using Microsoft.EntityFrameworkCore;
+using Restaurants.Domain.Constants;
 using Restaurants.Domain.Entities;
 using Restaurants.Domain.Repositories;
 using Restaurants.Infrastructure.Persistence;
@@ -26,7 +28,9 @@ internal class RestaurantsRepository(RestaurantsDbContext dbContext) : IRestaura
     public async Task<(IEnumerable<Restaurant>, int)> GetAllMatchingAsync(
         string? searchPhrase,
         int pageSize,
-        int pageNumber
+        int pageNumber,
+        string? sortBy,
+        SortDirection? sortDirection
     )
     {
         string searchPhraseLower = searchPhrase?.ToLower() ?? string.Empty;
@@ -43,6 +47,22 @@ internal class RestaurantsRepository(RestaurantsDbContext dbContext) : IRestaura
             );
 
         int totalCount = await baseQuery.CountAsync();
+
+        if (!string.IsNullOrEmpty(sortBy))
+        {
+            Dictionary<string, Expression<Func<Restaurant, object>>> columnSelector = new()
+            {
+                { nameof(Restaurant.Name), r => r.Name },
+                { nameof(Restaurant.Description), r => r.Description },
+                { nameof(Restaurant.Category), r => r.Category },
+            };
+
+            var selectedColumn = columnSelector[sortBy];
+            baseQuery =
+                (sortDirection == SortDirection.Ascending || sortDirection == null)
+                    ? baseQuery.OrderBy(selectedColumn)
+                    : baseQuery.OrderByDescending(selectedColumn);
+        }
 
         IEnumerable<Restaurant> restaurants = await baseQuery
             .Skip(pageSize * (pageNumber - 1))
