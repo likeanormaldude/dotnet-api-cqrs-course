@@ -1,5 +1,4 @@
 ﻿using FluentValidation;
-using Mapster;
 using MapsterMapper;
 using Microsoft.Extensions.DependencyInjection;
 using Restaurants.Application.Common;
@@ -17,6 +16,6 @@ public static class ServiceCollectionExtensions
         services.AddValidatorsFromAssemblyContaining(ApplicationType);
         services.AddScoped<IUserContext, UserContext>();
         services.AddHttpContextAccessor();
-        services.AddSingleton(MapsterApplicationHelper.RegisterAll(new TypeAdapterConfig(), ApplicationType.Assembly));
+        services.AddSingleton(MapsterApplicationHelper.RegisterAll());
     }
 }

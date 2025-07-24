@@ -8,17 +8,31 @@ namespace Restaurants.Application.Common;
 /// </summary>
 public static class MapsterApplicationHelper
 {
+    private static Type ApplicationType = typeof(MapsterApplicationHelper);
+
     /// <summary>
     /// Registers all Mapster configurations from the specified assembly.
     /// </summary>
-    public static TypeAdapterConfig RegisterAll(TypeAdapterConfig config, Assembly assembly)
+    public static TypeAdapterConfig RegisterAll(TypeAdapterConfig? config = null, Assembly? assembly = null)
     {
-        var mappingTypes = assembly
+        if (config == null)
+        {
+            config = new TypeAdapterConfig();
+        }
+
+        if (assembly == null)
+        {
+            assembly = ApplicationType.Assembly;
+        }
+
+        IEnumerable<Type> mappingTypes = assembly
             .GetTypes()
             .Where(t => typeof(IRegisterMapsterConfig).IsAssignableFrom(t) && !t.IsInterface && !t.IsAbstract);
 
-        foreach (var type in mappingTypes)
+        foreach (Type type in mappingTypes)
+        {
             ((IRegisterMapsterConfig)Activator.CreateInstance(type)!).Register(config);
+        }
 
         return config;
     }
