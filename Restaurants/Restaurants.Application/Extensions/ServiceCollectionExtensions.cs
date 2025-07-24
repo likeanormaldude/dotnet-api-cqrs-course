@@ -2,56 +2,21 @@
 using Mapster;
 using MapsterMapper;
 using Microsoft.Extensions.DependencyInjection;
-using Restaurants.Application.Dishes.Commands.CreateDish;
-using Restaurants.Application.Dishes.Dtos;
-using Restaurants.Application.Restaurants.Commands.CreateRestaurant;
-using Restaurants.Application.Restaurants.Commands.UpdateRestaurant;
-using Restaurants.Application.Restaurants.Dtos;
+using Restaurants.Application.Common;
 using Restaurants.Application.Users;
-using Restaurants.Domain.Entities;
 
 namespace Restaurants.Application.Extensions;
 
 public static class ServiceCollectionExtensions
 {
+    private static Type ApplicationType = typeof(ServiceCollectionExtensions);
+
     public static void AddApplication(this IServiceCollection services)
     {
-        services.AddSingleton(GetMappingConfigs());
         services.AddScoped<IMapper, ServiceMapper>();
-        services.AddValidatorsFromAssemblyContaining(typeof(ServiceCollectionExtensions));
+        services.AddValidatorsFromAssemblyContaining(ApplicationType);
         services.AddScoped<IUserContext, UserContext>();
         services.AddHttpContextAccessor();
-    }
-
-    private static TypeAdapterConfig GetMappingConfigs()
-    {
-        var config = TypeAdapterConfig.GlobalSettings;
-
-        config.NewConfig<Dish, DishDto>();
-        config.NewConfig<CreateDishCommand, Dish>();
-        config.NewConfig<DishDto, Dish>();
-        config
-            .NewConfig<Restaurant, RestaurantDto>()
-            .Map(dest => dest.City, src => src.Address != null ? src.Address.City : "")
-            .Map(dest => dest.Street, src => src.Address != null ? src.Address.Street : "")
-            .Map(dest => dest.PostalCode, src => src.Address != null ? src.Address.PostalCode : "")
-            .Map(dest => dest.Dishes, src => src.Dishes)
-            .Map(dest => dest.Owner, src => src.Owner.UserName);
-
-        config
-            .NewConfig<CreateRestaurantCommand, Restaurant>()
-            .Map(dest => dest.Address.City, src => src.City)
-            .Map(dest => dest.Address.Street, src => src.Street)
-            .Map(dest => dest.Address.PostalCode, src => src.PostalCode)
-            .Map(dest => dest.Dishes, src => src.Dishes);
-
-        config
-            .NewConfig<UpdateRestaurantCommand, Restaurant>()
-            .Map(dest => dest.Address.City, src => src.City)
-            .Map(dest => dest.Address.Street, src => src.Street)
-            .Map(dest => dest.Address.PostalCode, src => src.PostalCode)
-            .Map(dest => dest.Dishes, src => src.Dishes);
-
-        return config;
+        services.AddSingleton(MapsterApplicationHelper.RegisterAll(new TypeAdapterConfig(), ApplicationType.Assembly));
     }
 }
