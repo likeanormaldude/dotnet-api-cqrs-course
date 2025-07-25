@@ -99,6 +99,8 @@ public class UpdateRestaurantCommandHandlerTests
         #endregion
 
         #region Assert
+        mapperMock.Verify(x => x.Map(command, restaurant), Times.Once);
+        restaurantsRepository.Verify(x => x.SaveChanges(), Times.Once);
         restaurantAfterUpdate.Should().NotBeNull();
         restaurantAfterUpdate.Id.Should().Be(restaurant.Id);
         restaurantAfterUpdate.Name.Should().Be(command.Name);
