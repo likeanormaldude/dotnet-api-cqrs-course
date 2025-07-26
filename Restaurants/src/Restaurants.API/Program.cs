@@ -9,40 +9,52 @@ using Restaurants.Infrastructure.Seeders;
 using Restaurants.Infrastructure.Services;
 using Serilog;
 
-var builder = WebApplication.CreateBuilder(args);
-
-builder.AddPresentation();
-builder.Services.AddApplication();
-builder.Services.AddInfrastructure(builder.Configuration);
-
-var app = builder.Build();
-
-using (IServiceScope scope = app.Services.CreateScope())
+try
 {
-    var dbContext = scope.ServiceProvider.GetRequiredService<RestaurantsDbContext>();
-    var seeder = scope.ServiceProvider.GetRequiredService<IRestaurantSeeder>();
-    dbContext.Database.Migrate(); // (optional, auto apply migrations)
+    var builder = WebApplication.CreateBuilder(args);
 
-    var runner = new DataScriptRunner(dbContext, scope.ServiceProvider);
-    await runner.RunAllAsync();
+    builder.AddPresentation();
+    builder.Services.AddApplication();
+    builder.Services.AddInfrastructure(builder.Configuration);
+
+    var app = builder.Build();
+
+    using (IServiceScope scope = app.Services.CreateScope())
+    {
+        var dbContext = scope.ServiceProvider.GetRequiredService<RestaurantsDbContext>();
+        var seeder = scope.ServiceProvider.GetRequiredService<IRestaurantSeeder>();
+        dbContext.Database.Migrate(); // (optional, auto apply migrations)
+        await seeder.Seed();
+
+        var runner = new DataScriptRunner(dbContext, scope.ServiceProvider);
+        await runner.RunAllAsync();
+    }
+
+    // Configure the HTTP request pipeline.
+    app.UseHttpsRedirection();
+    app.UseAuthorization();
+    app.MapControllers();
+    app.UseSerilogRequestLogging();
+    app.UseMiddleware<ErrorHandlingMiddleware>();
+    app.UseMiddleware<RequestTimeLoggingMiddleware>();
+    app.UseMiddleware<ValidationExceptionMiddleware>();
+    app.MapGroup("api/identity").WithTags("Identity").MapIdentityApi<User>();
+
+    if (app.Environment.IsDevelopment())
+    {
+        app.UseSwagger();
+        app.UseSwaggerUI();
+    }
+
+    await app.RunAsync();
 }
-
-// Configure the HTTP request pipeline.
-app.UseHttpsRedirection();
-app.UseAuthorization();
-app.MapControllers();
-app.UseSerilogRequestLogging();
-app.UseMiddleware<ErrorHandlingMiddleware>();
-app.UseMiddleware<RequestTimeLoggingMiddleware>();
-app.UseMiddleware<ValidationExceptionMiddleware>();
-app.MapGroup("api/identity").WithTags("Identity").MapIdentityApi<User>();
-
-if (app.Environment.IsDevelopment())
+catch (Exception ex)
 {
-    app.UseSwagger();
-    app.UseSwaggerUI();
+    Log.Fatal(ex, "Application startup failed");
 }
-
-await app.RunAsync();
+finally
+{
+    Log.CloseAndFlush();
+}
 
 public partial class Program { }

@@ -1,7 +1,7 @@
-﻿using System.Text.Json;
-using Microsoft.AspNetCore.Identity;
+﻿using Microsoft.AspNetCore.Identity;
 using Restaurants.Domain.Constants;
 using Restaurants.Domain.Entities;
+using System.Text.Json;
 
 namespace Restaurants.Infrastructure.Seeders;
 

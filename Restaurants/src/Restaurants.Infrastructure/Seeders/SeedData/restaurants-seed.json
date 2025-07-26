@@ -21,6 +21,11 @@
       "City": "London",
       "Street": "Cork St 5",
       "PostalCode": "WC2N 5DU"
+    },
+    "Owner": {
+      "UserName": "owner",
+      "NormalizedUserName": "OWNER",
+      "Email": "test@test.com"
     }
   },
   {
@@ -34,6 +39,11 @@
       "City": "London",
       "Street": "Boots 193",
       "PostalCode": "W1F 8SR"
+    },
+    "Owner": {
+      "UserName": "owner",
+      "NormalizedUserName": "OWNER",
+      "Email": "test@test.com"
     }
   }
 ]
