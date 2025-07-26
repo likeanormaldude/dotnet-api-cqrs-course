@@ -14,7 +14,7 @@
     <PackageReference Include="xunit.runner.visualstudio" Version="3.0.2" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\Restaurants.Application\Restaurants.Application.csproj" />
+    <ProjectReference Include="..\..\src\Restaurants.Infrastructure\Restaurants.Infrastructure.csproj" />
   </ItemGroup>
   <ItemGroup>
     <Using Include="Microsoft.VisualStudio.TestTools.UnitTesting" />
