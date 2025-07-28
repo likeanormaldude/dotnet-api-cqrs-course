@@ -7,6 +7,7 @@ namespace Restaurants.Infrastructure.Seeders;
 
 public static class RestaurantSeederService
 {
+    private const string PARENT_DIR = "Seeders";
     private const string DIR_DATA = "SeedData";
     private static JsonSerializerOptions options = new() { PropertyNameCaseInsensitive = true };
 
@@ -30,10 +31,35 @@ public static class RestaurantSeederService
 
     private static T? ReadFromJsonSeedData<T>(string filename)
     {
-        string path = Path.Combine(AppContext.BaseDirectory, DIR_DATA, filename);
-        string json = File.ReadAllText(path);
-        T? contents = JsonSerializer.Deserialize<T>(json, options);
+        string json = string.Empty;
 
+        try
+        {
+            // All possible locations, considering differences in project structure between local and Azure
+            string[] possiblePaths =
+            {
+                Path.Combine(AppContext.BaseDirectory, DIR_DATA, filename),
+                Path.Combine(AppContext.BaseDirectory, PARENT_DIR, DIR_DATA, filename),
+            };
+
+            string? pathFound = possiblePaths.FirstOrDefault(File.Exists);
+
+            if (pathFound == null)
+                throw new FileNotFoundException(
+                    $"Could not find seed data file: {filename}. Tried: {string.Join(", ", possiblePaths)}"
+                );
+
+            json = File.ReadAllText(pathFound);
+        }
+        catch (FileNotFoundException ex)
+        {
+            throw new InvalidOperationException(
+                $"Failed to read seed data from file '{filename}'. Ensure the file exists in the expected location.",
+                ex
+            );
+        }
+
+        T? contents = JsonSerializer.Deserialize<T>(json, options);
         return contents;
     }
 }
