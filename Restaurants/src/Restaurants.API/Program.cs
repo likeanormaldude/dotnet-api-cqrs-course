@@ -33,11 +33,13 @@ try
     // Configure the HTTP request pipeline.
     app.UseHttpsRedirection();
     app.UseAuthorization();
-    app.MapControllers();
     app.UseSerilogRequestLogging();
+
     app.UseMiddleware<ErrorHandlingMiddleware>();
     app.UseMiddleware<RequestTimeLoggingMiddleware>();
     app.UseMiddleware<ValidationExceptionMiddleware>();
+
+    app.MapControllers();
     app.MapGroup("api/identity").WithTags("Identity").MapIdentityApi<User>();
 
     if (app.Environment.IsDevelopment())
@@ -50,7 +52,8 @@ try
 }
 catch (Exception ex)
 {
-    Log.Fatal(ex, "Application startup failed");
+    Log.Fatal(ex, "Application startup failed with exception: {Exception}", ex);
+    Console.WriteLine(ex.ToString());
 }
 finally
 {
