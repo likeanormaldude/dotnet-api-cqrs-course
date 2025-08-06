@@ -2,6 +2,7 @@
 using FluentAssertions;
 using MapsterMapper;
 using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.Extensions.Logging;
 using Moq;
 using Restaurants.Application.Restaurants.Dtos;
@@ -21,6 +22,7 @@ public class UpdateRestaurantCommandHandlerTests
     private Restaurant restaurant;
     private Mock<IRestaurantAuthorizationService> authorizationMock;
     private Mock<IRestaurantsRepository> restaurantsRepository;
+    private Mock<UserManager<User>> userManager;
     private Mock<ILogger<UpdateRestaurantCommandHandler>> loggerMock;
     private Mock<IMapper> mapperMock;
     private Mock<IUserContext> userContextMock;
@@ -30,6 +32,7 @@ public class UpdateRestaurantCommandHandlerTests
     public UpdateRestaurantCommandHandlerTests()
     {
         restaurantsRepository = new Mock<IRestaurantsRepository>();
+        userManager = new Mock<UserManager<User>>();
         authorizationMock = new Mock<IRestaurantAuthorizationService>();
         loggerMock = new Mock<ILogger<UpdateRestaurantCommandHandler>>();
         mapperMock = new Mock<IMapper>();
@@ -80,7 +83,8 @@ public class UpdateRestaurantCommandHandlerTests
             loggerMock.Object,
             restaurantsRepository.Object,
             mapperMock.Object,
-            authorizationMock.Object
+            authorizationMock.Object,
+            userManager.Object
         );
 
         #endregion
@@ -138,7 +142,8 @@ public class UpdateRestaurantCommandHandlerTests
             loggerMock.Object,
             restaurantsRepository.Object,
             mapperMock.Object,
-            authorizationMock.Object
+            authorizationMock.Object,
+            userManager.Object
         );
         #endregion
 
@@ -177,7 +182,8 @@ public class UpdateRestaurantCommandHandlerTests
             loggerMock.Object,
             restaurantsRepository.Object,
             mapperMock.Object,
-            authorizationMock.Object
+            authorizationMock.Object,
+            userManager.Object
         );
         #endregion
 

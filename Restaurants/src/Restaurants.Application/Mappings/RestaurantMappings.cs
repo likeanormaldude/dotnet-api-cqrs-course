@@ -28,7 +28,8 @@ public class RestaurantMappings : IRegisterMapsterConfig
         config
             .NewConfig<UpdateRestaurantCommand, Restaurant>()
             .Map(dest => dest.Address, src => MapToAddress(src))
-            .Map(dest => dest.Dishes, src => src.Dishes);
+            .Map(dest => dest.Dishes, src => src.Dishes)
+            .Ignore(dest => dest.Owner);
     }
 
     private static Address MapToAddress(CreateRestaurantCommand src) =>

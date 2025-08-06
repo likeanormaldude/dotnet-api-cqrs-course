@@ -1,5 +1,6 @@
 ﻿using MapsterMapper;
 using MediatR;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.Extensions.Logging;
 using Restaurants.Domain.Constants;
 using Restaurants.Domain.Entities;
@@ -13,7 +14,8 @@ public class UpdateRestaurantCommandHandler(
     ILogger<UpdateRestaurantCommandHandler> logger,
     IRestaurantsRepository restaurantsRepository,
     IMapper mapper,
-    IRestaurantAuthorizationService restaurantAuthorizationService
+    IRestaurantAuthorizationService restaurantAuthorizationService,
+    UserManager<User> userManager
 ) : IRequestHandler<UpdateRestaurantCommand>
 {
     public async Task Handle(UpdateRestaurantCommand request, CancellationToken cancellationToken)
@@ -32,6 +34,16 @@ public class UpdateRestaurantCommandHandler(
         }
 
         mapper.Map(request, restaurant);
+
+        if (request.Owner is not null)
+        {
+            User owner =
+                await userManager.FindByNameAsync(request.Owner)
+                ?? throw new NotFoundException(nameof(User), request.Owner);
+
+            restaurant.Owner = owner;
+        }
+
         await restaurantsRepository.SaveChanges();
     }
 }
