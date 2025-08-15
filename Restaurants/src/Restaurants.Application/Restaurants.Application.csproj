@@ -14,9 +14,9 @@
     <PackageReference Include="Microsoft.Extensions.Logging.Abstractions" Version="9.0.6" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\Restaurants.Domain\Restaurants.Domain.csproj" />
+    <Folder Include="Restaurants\Dtos\Validators\" />
   </ItemGroup>
   <ItemGroup>
-    <Folder Include="Restaurants\Dtos\Validators\" />
+    <ProjectReference Include="..\Restaurants.Domain\Restaurants.Domain.csproj" />
   </ItemGroup>
 </Project>
