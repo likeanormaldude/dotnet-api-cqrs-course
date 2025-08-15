@@ -26,6 +26,7 @@ public class UpdateRestaurantCommandHandlerTests
     private Mock<ILogger<UpdateRestaurantCommandHandler>> loggerMock;
     private Mock<IMapper> mapperMock;
     private Mock<IUserContext> userContextMock;
+    private Mock<IBlobStorageService> blobStorageServiceMock;
     private const int restaurantIdMock = 1;
     private const string onwerIdMock = "owner-id";
 
@@ -37,6 +38,7 @@ public class UpdateRestaurantCommandHandlerTests
         loggerMock = new Mock<ILogger<UpdateRestaurantCommandHandler>>();
         mapperMock = new Mock<IMapper>();
         userContextMock = new Mock<IUserContext>();
+        blobStorageServiceMock = new Mock<IBlobStorageService>();
 
         restaurant = new Restaurant()
         {
@@ -96,7 +98,8 @@ public class UpdateRestaurantCommandHandlerTests
         var queryHandler = new GetRestaurantByIdQueryHandler(
             restaurantsRepository.Object,
             loggerForQueryMock.Object,
-            mapperMock.Object
+            mapperMock.Object,
+            blobStorageServiceMock.Object
         );
 
         RestaurantDto restaurantAfterUpdate = await queryHandler.Handle(query, CancellationToken.None);

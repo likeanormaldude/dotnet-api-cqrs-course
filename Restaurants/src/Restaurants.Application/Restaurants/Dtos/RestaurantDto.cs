@@ -17,5 +17,5 @@ public class RestaurantDto
     public string? PostalCode { get; set; }
     public List<DishDto> Dishes { get; set; } = [];
     public string Owner { get; set; } = default!;
-    public string? LogoUrl { get; set; } = string.Empty;
+    public string? LogoSasUrl { get; set; } = string.Empty;
 }

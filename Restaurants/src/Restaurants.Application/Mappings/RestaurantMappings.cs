@@ -18,7 +18,7 @@ public class RestaurantMappings : IRegisterMapsterConfig
             .Map(dest => dest.PostalCode, src => src.Address != null ? src.Address.PostalCode : "")
             .Map(dest => dest.Dishes, src => src.Dishes)
             .Map(dest => dest.Owner, src => src.Owner.UserName)
-            .Map(dest => dest.LogoUrl, src => src.LogoUrl ?? string.Empty);
+            .Map(dest => dest.LogoSasUrl, src => src.LogoUrl ?? string.Empty);
 
         config
             .NewConfig<CreateRestaurantCommand, Restaurant>()
