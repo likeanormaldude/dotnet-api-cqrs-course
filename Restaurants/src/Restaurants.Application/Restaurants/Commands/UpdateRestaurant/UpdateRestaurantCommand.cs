@@ -1,5 +1,6 @@
 ﻿using MediatR;
 using Restaurants.Application.Dishes.Dtos;
+using Restaurants.Domain.Entities;
 
 namespace Restaurants.Application.Restaurants.Commands.UpdateRestaurant;
 
@@ -20,4 +21,6 @@ public class UpdateRestaurantCommand(int id) : IRequest
 
     public string? PostalCode { get; set; }
     public List<DishDto> Dishes { get; set; } = [];
+    public string? Owner { get; set; }
+    public User? _Owner { get; set; }
 }

@@ -4,8 +4,10 @@ using Microsoft.AspNetCore.Mvc;
 using Restaurants.Application.Users.Commands.AssignUserRole;
 using Restaurants.Application.Users.Commands.UnassignRoleFromUser;
 using Restaurants.Application.Users.Commands.UpdateUserDetails;
+using Restaurants.Application.Users.Queries.GetUserDetailsQuery;
 using Restaurants.Application.Users.Queries.GetUserRolesQuery;
 using Restaurants.Domain.Constants;
+using Restaurants.Domain.Entities;
 
 namespace Restaurants.API.Controllers;
 
@@ -36,6 +38,20 @@ public class IdentityController(IMediator mediator) : ControllerBase
         GetUserRolesQuery query = new(username);
         IEnumerable<string> userRoles = await mediator.Send(query);
         return Ok(userRoles);
+    }
+
+    [HttpGet("user")]
+    public async Task<ActionResult<User>> GetUserDetails([FromQuery] string username)
+    {
+        GetUserDetailsQuery query = new(username);
+        var user = await mediator.Send(query);
+
+        if (user is null)
+        {
+            NoContent();
+        }
+
+        return Ok(user);
     }
 
     [HttpDelete("userRole")]
